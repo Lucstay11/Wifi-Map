@@ -37,9 +37,9 @@ $ npm i csv csv-parser express express-fileupload path socket.io
 $ /Wifi-Map
 $ node app.js
 ```
-**``**
 
-<i align="center">To communicate with chat gpt you just have to insert your <b>Api Key</b> in the index.js or in the Chat-Bot settings</i>
+
+<i align="center">Export your database in CSV format on the Wigle application and then import it on the  <b>wifi map</b>!</i>
 
 <p align="center">
   <img height="600" src="public/img/wigle.jpg">
