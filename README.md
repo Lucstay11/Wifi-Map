@@ -34,7 +34,7 @@ $ npm i csv csv-parser express express-fileupload path socket.io
 **`Start App`**
 
 ```
-$ /Wifi-Map
+/Wifi-Map
 $ node app.js
 ```
 
