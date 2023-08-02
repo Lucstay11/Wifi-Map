@@ -5,6 +5,7 @@ var dateNow = new Date().toLocaleDateString('en-CA');
 var date_verif = "";
 
 
+
 function initMap(){
 
  const sv = new google.maps.StreetViewService();
@@ -59,7 +60,8 @@ function initMap(){
 
 
 function display_marker(){
-tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], i) => {
+
+  tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], i) => {
       if(i==tourStops.length-1){ var last="Last WI-FI captued!";}
               else{var last="";}
       var icon_marker=SECURITY=="NONE"?marker_wifi_open:marker_wifi_protected;
@@ -105,6 +107,8 @@ tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], 
     boite_ext.push(markersignal_map);
     Map.setStreetView(panorama);
 
+      // Add a marker clusterer to manage the markers.
+
    markersignal_map.addListener("click", (event) => {
        infoWindow.close();
        Map.setZoom(20);
@@ -112,18 +116,8 @@ tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], 
       infoWindow.setContent(markersignal_map.getTitle());
       infoWindow.open(markersignal_map.getMap(), markersignal_map);
     });
-
-   // Créez le cluster de markers
-const markerCluster = new MarkerClusterer(Map, markersignal_map, {
-  imagePath:
-    "http://www.empowervate.org/wp-content/uploads/2015/11/circle.jpg",
-});
-
-
-    // var markerCluster = new MarkerClusterer(Map, markersignal_map, {
-    //   imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
-    // });
   }  
+  // markerCluster = new MarkerClusterer(Map, boite_ext,{gridSize: 20});
  }
 
   });
@@ -312,6 +306,7 @@ function HideAllMarkers(){
     });
     
   })
+
 }
 
 //Control street view panel
