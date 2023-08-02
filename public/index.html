@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@700&family=Montserrat:ital,wght@1,300;1,400&family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/jpg" href="img/Wifi-logo.png"  sizes="400x400"/>
+    <link href="src/map.min.css" rel="stylesheet" type="text/css">
+    <link href="src/all.min.css" rel="stylesheet" type="text/css">
+    <title>Wifi Map</title>
+
+<style>
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+#streetview {
+  height: 70%;
+}
+
+#map {
+  height: 60%;
+  transition: all 1s;
+  box-shadow: 0px 0px 8px black;
+}
+::placeholder {
+  color: white;
+  opacity: 1;
+}
+button{
+background-color:white;
+border:none;
+}
+input,button{
+border:none;
+display:block;
+margin:0 auto;
+box-shadow:0px 0px 4px black;
+}
+</style>
+</head>
+
+
+   <body>
+<div id="test"></div>
+     <div id="map" style="transition:all 2s;height:80%;opacity:0.1;"></div>
+     <div id="streetview" style="display:none;transition: border 1s;height:60%;"></div>
+     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeTlM2-93T2TwzAVf-tpTAoCxlfHGSnqc" defer></script>
+     <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+     <script src="/socket.io/socket.io.js"></script>
+     <script>
+        const socket = io();
+     </script>
+
+     <div class="bg-gradient-primary text-dark">
+       <div style="display:flex;justify-content:space-between;" class="bg-gradient-dark text-white">
+         <p style="border-right:solid 1px grey;">WPA3<br><span class="text-primary" id="nb_wpa3"></span></p>
+         <p style="border-right:solid 1px grey;">WPA2<br><span class="text-primary" id="nb_wpa2"></span></p>
+         <p style="border-right:solid 1px grey;">WPA<br><span class="text-primary" id="nb_wpa"></span></p>
+         <p style="border-right:solid 1px grey;">WEP<br><span class="text-primary" id="nb_wep"></span></p>
+         <p style="border-right:solid 1px grey;">OPEN<br><span class="text-primary" id="nb_open"></span></p>
+       </div>
+         <div id="setwifi" style="display:none;" class="text-center">
+              <div class="card" style="width: 100%;transition:all 2s;">
+              <div class="card-header" onclick='this.classList.add("btn", "btn-success", "btn-icon-split", "btn-sm")'><img height="20" src="img/wifi-gauge.png">View only</div>
+          <ul class="list-group list-group-flush">
+          <li class="list-group-item view-security" onclick="this.style.textDecoration=this.style.textDecoration=='line-through'?'none':'line-through'">WPA3<img height="20" src="img/blue-marker.png"></li>
+          <li class="list-group-item view-security" onclick="this.style.textDecoration=this.style.textDecoration=='line-through'?'none':'line-through'">WPA2<img height="20" src="img/blue-marker.png"></li>
+          <li class="list-group-item view-security" onclick="this.style.textDecoration=this.style.textDecoration=='line-through'?'none':'line-through'">WPA<img height="20" src="img/blue-marker.png"></li>
+          <li class="list-group-item view-security" onclick="this.style.textDecoration=this.style.textDecoration=='line-through'?'none':'line-through'">WEP<img height="20" src="img/red-marker.png"></li>
+          <li class="list-group-item view-security" onclick="this.style.textDecoration=this.style.textDecoration=='line-through'?'none':'line-through'">OPEN<img height="20" src="img/green-marker.png"></li>
+          </ul>
+          <button id="Btnviewallmarker" class="btn bg-gradient-success btn-icon-split btn-sm text-white" style="display: none;">See all markers</button>
+          <button id="Btnhideallmarker" class="btn bg-gradient-secondary btn-icon-split btn-sm text-white">Hide all markers</button>
+           <hr>
+           <p class="center"><img height="20" src="img/calender.png">Show wifi networks discovered since</p>
+           <input id="wifidate" type="date">
+        </div> 
+         </div>
+         <img src="img/chevron-down.png" height="30" style="display:block;margin:0 auto;" onclick="setwifi.style.display=setwifi.style.display=='block'?'none':'block'">
+     </div>
+     <div class="card mb-4">
+                 <div class="card-header py-3 text-center">
+                      <button onclick="street_view();" class="btn btn-success btn-icon-split btn-sm">
+                           <span class="icon text-white-50">
+                              <img src="img/streetview.png" height="20">
+                               </span>
+                               <span id="etatsview" class="text">Active Street View</span>
+                       </button>
+                  </div>
+     </div>
+     <p class="text-center"><img src="img/database.png" height="40">Wifi Database</p>
+        <select id="selectcsv" onclick="btndwn.href=`/${this.value}`" class="listfilewifi btn btn-primary btn-icon-split btn-sm" style="display: block;margin:0 auto;box-shadow:0px 0px 4px black;">
+        </select>
+             <img id="loadwififile" height="30" style="display:none;margin: 0 auto;" src="img/loading.gif">
+
+         <div class="card shadow mb-4" id="card-database">
+                        <div style="display:flex;" class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary"><span id="nb_capture"></span> Captures</h6>
+                        </div>
+
+                        <div class="card-body" style="overflow: hidden;">
+                            <div class="table-responsive text-primary" style="height: 1000px;">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>SSID & Channel</th>
+                                            <th>Mac adress</th>
+                                            <th>Security</th>
+                                            <th>Signal level</th>
+                                            <th>WPS</th>
+                                            <th>Date capture</th>
+                                        </tr>
+                                    </thead>
+                                      <tbody id="boxwifidb">
+                                      </tbody>
+                                </table>
+                            </div>
+ <div style="display:flex;">
+ <img height="30" style="display:block;margin:0 auto;float:right;" src="img/add.png" onclick="uploadcsv.style.display='none';deletecsv.style.display='none';downloaddb.style.display='none';uploadcsv.style.display=uploadcsv.style.display=='block'?'none':'block'">
+ <img height="30" style="display:block;margin:0 auto;float:left;" src="img/download.png" onclick="uploadcsv.style.display='none';deletecsv.style.display='none';downloaddb.style.display='none';downloaddb.style.display=downloaddb.style.display=='block'?'none':'block'">
+ <img height="30" style="display:block;margin:0 auto;float:left;" src="img/delete.png" onclick="uploadcsv.style.display='none';deletecsv.style.display='none';downloaddb.style.display='none';deletecsv.style.display=deletecsv.style.display=='block'?'none':'block'">
+ </div>
+       <div id="downloaddb" style="display:block;margin-top:50px;text-align: center;">
+       <p>Download database ->Format .CSV</p>
+       <hr>
+        <p>Choose your Wifi file database</p>
+        <select onchange="btndwn.href=`/${this.value}`" class="listfilewifi btn btn-primary btn-icon-split btn-sm">
+        </select>
+        <a id="btndwn" href="">Download</a>
+          
+       </div>
+       <div id="uploadcsv" style="display:none">
+       <form method="POST" action="/upload-file" enctype="multipart/form-data" style="margin-top:50px;text-align: center;">
+       <input id="uploadfile" class="bg-gradient-dark d-none" style="width:45%;"  name="file" type="file" accept=".csv" oninput="if(files[0].name.split('.').pop()=='csv'){fileinfo.textContent=this.files[0].name}else{filename.textContent='Only .csv file';this.value=''}">
+       <label for="uploadfile" class="d-block m-auto">
+        <img src="img/csv.png" height="60">
+       </label>
+       <p id="fileinfo" class="text-center text-dark"></p>
+         <p class="text-primary text-center">Add new Wigle Wifi .csv file to database</p>
+       <input class="bg-gradient-primary text-white" type="submit" onclick="loadparam.style.display='block'" value="Upload"/>
+       </form>
+       <hr>
+       <form method="POST" action="/upload-wifi" enctype="multipart/form-data" style="margin-top:50px;text-align: center;">
+        <input id="uploadwifi" class="bg-gradient-dark d-none" style="width:45%;"  name="file" type="file" accept=".csv" oninput="if(files[0].name.split('.').pop()=='csv'){fileinfowifi.textContent=this.files[0].name}else{filename.textContent='Only .csv file';this.value=''}">
+       <label for="uploadwifi">
+        <img src="img/csv.png" height="60">
+       </label>
+       <p id="fileinfowifi" class="text-center text-dark"></p>
+        <select name="namefile" class="listfilewifi btn btn-primary btn-icon-split btn-sm d-block m-auto">
+        </select>
+        <br>
+        <p class="text-primary text-center">Add a Wigle file .csv to an existing database</p>
+        <input class="bg-gradient-primary text-white" type="submit" onclick="loadparam.style.display='block'" value="Add"/>
+        </form>
+       </div>
+
+       <form id="deletecsv" method="POST" action="/delete" enctype="multipart/form-data" style="display:none;margin-top:50px;">
+        <select name="file" class="listfilewifi btn btn-danger btn-icon-split btn-sm d-block m-auto">
+        </select>
+        <br>
+        <p class="text-danger text-center">Delete Wifi file database</p>
+           <p id="filename" class="text-center text-dark"></p>
+        <input class="bg-gradient-danger text-white" type="submit" onclick="loadparam.style.display='block'" value="Delete"/>
+        </form>
+
+        <img id="loadparam" height="30" style="display:none;margin: 0 auto;" src="img/loading.gif">
+                        </div>
+                    </div>
+                </div>
+            </div>
+      <footer>
+         <div class="bg-gradient-primary" style="display:flex;box-shadow:0px 0px 4px black;">
+         <p style="border:solid 1px lightgreen;color:lightgreen;background-color:lightgreen;border-radius:50%;width:10px;height:10px;"></p><img height="20" src="img/person.png" ><p style="font-weight:900;color:white;" id="nb_live"></p>
+         </div>
+       </footer>
+       
+       <script src="src/jquery-3.5.1.js"></script>
+       <script src="src/jquery.dataTables.min.js"></script>
+       <script src="src/dataTables.bootstrap4.min.js"></script>
+       <script src="src/datatables-demo.js"></script>
+       <script src="socket.js"></script>
+       <script src="main.js"></script>
+       <script src="src/style-map.js"></script>
+
+</html>
