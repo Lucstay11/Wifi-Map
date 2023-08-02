@@ -103,8 +103,7 @@ tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], 
     });
 
     boite_ext.push(markersignal_map);
-
-  Map.setStreetView(panorama);
+    Map.setStreetView(panorama);
 
    markersignal_map.addListener("click", (event) => {
        infoWindow.close();
@@ -113,6 +112,14 @@ tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], 
       infoWindow.setContent(markersignal_map.getTitle());
       infoWindow.open(markersignal_map.getMap(), markersignal_map);
     });
+
+   // Créez le cluster de markers
+const markerCluster = new MarkerClusterer(Map, markersignal_map, {
+  imagePath:
+    "http://www.empowervate.org/wp-content/uploads/2015/11/circle.jpg",
+});
+
+
     // var markerCluster = new MarkerClusterer(Map, markersignal_map, {
     //   imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
     // });
