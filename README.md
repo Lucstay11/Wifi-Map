@@ -21,7 +21,7 @@
   <img height="600" src="src/demo1.jpg">
 </p>
 
-**`Install nodejs and npm`**
+**`First install nodejs and npm`**
 
 ```
 $ git clone https://github.com/Lucstay11/Wifi-Map;cd Wifi-Map
