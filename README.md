@@ -1,0 +1,34 @@
+<p align="center">
+<a href="https://github.com/Ignitetch/AdvPhishing/releases"><img title="GitHub version" src="https://img.shields.io/badge/version-1-blue" ></a>  
+</p>
+<p align="center">
+  <img src="src/logo-gpt-bash.jpg">
+</p>
+<h1 align="center">Wifi-Map</h1>
+<p align="center">
+  <img src="https://img.shields.io/badge/📶-Network-blue?style=for-the-badge">
+  <img src="https://img.shields.io/badge/🔎-Osint-lightgreen?style=for-the-badge">
+  <img src="https://img.shields.io/badge/🌍-Maps-brown?style=for-the-badge">
+ 
+</p>
+<p align="center">
+  <img src="https://img.shields.io/badge/Author-Lucstay11-cyan?style=flat-square">
+  <img src="https://img.shields.io/badge/Open%20Source-Yes-cyan?style=flat-square">
+  <img src="https://img.shields.io/badge/Written%20In-NodeJS-yellow?style=flat-square">
+</p>
+<h2 align="center">Observe your wifi capture with Wigle on a Google map and personalized streetview</h2>
+<p align="center">
+  <img height="600" src="src/demo1.jpg">
+</p>
+
+**`Install nodejs and npm`**
+
+```
+$ git clone https://github.com/Lucstay11/Wifi-Map;cd Wifi-Map
+```
+```
+$ npm i csv csv-parser express express-fileupload path socket.io
+```
+
+
+**`Start App`**
