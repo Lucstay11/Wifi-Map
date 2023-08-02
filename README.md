@@ -43,5 +43,5 @@ $ node app.js
 
 <p align="center">
   <img height="600" src="public/img/wigle.jpg">
-   <img height="600" src="public/img/uplaod.jpg">
+   <img height="600" src="public/img/upload.jpg">
 </p>
