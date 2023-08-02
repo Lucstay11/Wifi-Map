@@ -32,3 +32,16 @@ $ npm i csv csv-parser express express-fileupload path socket.io
 
 
 **`Start App`**
+
+```
+$ /Wifi-Map
+$ node app.js
+```
+**``**
+
+<i align="center">To communicate with chat gpt you just have to insert your <b>Api Key</b> in the index.js or in the Chat-Bot settings</i>
+
+<p align="center">
+  <img height="600" src="public/img/wigle.jpg">
+   <img height="600" src="public/img/uplaod.jpg">
+</p>
