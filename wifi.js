@@ -58,12 +58,16 @@ function display_wifi(action, name,socket) {
     let WEP = 0;
     let OPEN = 0;
     let total = 0;
-
+    WIFI = [{name_file: name}];
     fs.createReadStream(folderPath + name)
-      .pipe(parse({ delimiter: ',', from_line: 2 }))
-      .on('data', function (row) {
+      .pipe(parse({
+       separator: ',',
+       from_line: 2,
+       mapHeaders: ({ header }) => header.trim()
+      }))
+      .on('data', function (data) {
         total++;
-        switch (row[4]) {
+        switch (data[4]) {
           case 'WPA3':
             WPA3++;
             break;
@@ -80,12 +84,17 @@ function display_wifi(action, name,socket) {
             OPEN++;
             break;
         }
+        WIFI.push(data)
       })
       .on('end', () => {
         const TotalSecurity = [WPA3, WPA2, WPA, WEP, OPEN];
-        io.to(socket.id).emit("csv",["wifi",TotalSecurity])
+        io.to(socket.id).emit("csv",[WIFI,TotalSecurity])
       });  
-    } 
+    }
+    
+    else if(action=="query"){
+      //TODO database wifi
+    }
 }
 
 

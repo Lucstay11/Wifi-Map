@@ -27,22 +27,12 @@ app.get("/:file(*)",(req,res)=>{
 
 io.on("connection",(socket)=>{
      io.emit("nb_live",socket.server.engine.clientsCount);
-     var WIFI = [{name_file:WifiFile}];
      fs.readdir(WifiFiles, (err, fichiers) => {
       io.to(socket.id).emit("list_wifi_file",fichiers)
      })
 
 socket.on("change_csv",(file)=>{
-   WIFI = [{name_file: file}];
-  fs.createReadStream('wifi/'+file)
-  .pipe(parse({
-    separator: ',',
-    mapHeaders: ({ header }) => header.trim()
-  }))
-  .on('data', (data) => WIFI.push(data))
-  .on('end', () => {
-     io.to(socket.id).emit("csv",WIFI)
-  });
+  display_wifi("file",file,socket)
 })
 
 //Verify is database exist and display at the client web
