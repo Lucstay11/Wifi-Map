@@ -30,11 +30,17 @@ socket.on("list_wifi_file",(file)=>{
    })
 
   socket.on("csv",(WIFI)=>{
+   console.log(WIFI)
     var WPA3=0;
     var WPA2=0;
     var WPA=0;
     var WEP=0;
     var OPEN=0;
+    nb_wpa3.textContent=WIFI[1][0];
+    nb_wpa2.textContent=WIFI[1][1];
+    nb_wpa.textContent=WIFI[1][2];
+    nb_wep.textContent=WIFI[1][3];
+    nb_open.textContent=WIFI[1][4];
    tourStops.push([{name_file:WIFI[0].name_file}]);
    nb_capture.textContent=WIFI.length-1;
    for(i=1;i<WIFI.length-1;i++){
@@ -48,32 +54,11 @@ socket.on("list_wifi_file",(file)=>{
        <td><p style="color:black;"><img height="20" src="img/calender.png">${WIFI[i]['Time']}</p><button name="${WIFI[i]['Longitude']}" value="${WIFI[i]['Latitude']}" class="goposition btn btn-success btn-sn"><img height="20" src="img/streetview.png"></button></td>
        </tr>
       `;
-      switch(WIFI[i]['Security']){
-         case "WPA3":
-            WPA3++;
-         break;;
-         case "WPA2":
-            WPA2++;
-         break;;
-         case "WPA":
-            WPA++;
-         break;;
-         case "WEP":
-            WEP++;
-         break;;
-         case "NONE":
-            OPEN++;
-         break;;
-       }
-        
+
+
           wifi.push([{ssid: WIFI[i]['Name'], mac: WIFI[i]['Address'], signal_level: WIFI[i]['Signal Level'], channel: WIFI[i]['Channel'], security: WIFI[i]['Security'],wps: WIFI[i]['WPS Support'], time_capture: WIFI[i]['Time'], lat: WIFI[i]['Latitude'], long: WIFI[i]['Longitude']}]);
 
          }
-         nb_wpa3.textContent=WPA3;
-         nb_wpa2.textContent=WPA2;
-         nb_wpa.textContent=WPA;
-         nb_wep.textContent=WEP;
-         nb_open.textContent=OPEN;
 
          setTimeout(()=>{
             for(i=0;i<wifi.length;i++){

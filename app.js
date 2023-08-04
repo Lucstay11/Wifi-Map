@@ -1,10 +1,10 @@
 const express = require("express");
 const app = require("express")();
 const server = require("http").createServer(app);
-const io = require("socket.io")(server);
+global.io = require("socket.io")(server);
 const upload = require("express-fileupload");
 const fs = require("fs");
-const parse= require("csv-parser");
+const parse = require("csv-parser");
 const PORT=2222;
 const path = require("path");
 const WifiFiles = path.join(__dirname,"wifi");
@@ -45,21 +45,14 @@ socket.on("change_csv",(file)=>{
   });
 })
 
-fs.readdir(WifiFiles, (err, files) => {
-   WifiFile=files[0]
+//Verify is database exist and display at the client web
+ fs.readdir(WifiFiles, (err, files) => {
+  WifiFile=files[0]
   if(files.length>0){
-fs.createReadStream('wifi/'+WifiFile)
-  .pipe(parse({
-    separator: ',',
-    mapHeaders: ({ header }) => header.trim()
-  }))
-  .on('data', (data) => WIFI.push(data))
-  .on('end', () => {
-     io.to(socket.id).emit("csv",WIFI)
-  });
- }
-})
-
+   display_wifi("file",WifiFile,socket)
+  } 
+ })
+   
    socket.on("disconnect",()=>{
     io.to(socket.id).emit("nb_live",socket.server.engine.clientsCount);
    })
@@ -109,4 +102,4 @@ server.listen(PORT,()=>{
 console.log("server start: "+PORT);
 });
 
-display_wifi(WifiFile);
+display_wifi("all");

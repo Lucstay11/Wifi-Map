@@ -56,8 +56,9 @@ box-shadow:0px 0px 4px black;
 <div id="test"></div>
      <div id="map" style="transition:all 2s;height:80%;opacity:0.1;"></div>
      <div id="streetview" style="display:none;transition: border 1s;height:60%;"></div>
-     <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
      <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+     <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+       <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeTlM2-93T2TwzAVf-tpTAoCxlfHGSnqc&v=weekly" defer></script>
      <script src="/socket.io/socket.io.js"></script>
      <script>
         const socket = io();
@@ -185,7 +186,7 @@ box-shadow:0px 0px 4px black;
          <p style="border:solid 1px lightgreen;color:lightgreen;background-color:lightgreen;border-radius:50%;width:10px;height:10px;"></p><img height="20" src="img/person.png" ><p style="font-weight:900;color:white;" id="nb_live"></p>
          </div>
        </footer>
-       
+
        <script src="src/jquery-3.5.1.js"></script>
        <script src="src/jquery.dataTables.min.js"></script>
        <script src="src/dataTables.bootstrap4.min.js"></script>
@@ -193,6 +194,4 @@ box-shadow:0px 0px 4px black;
        <script src="socket.js"></script>
        <script src="main.js"></script>
        <script src="src/style-map.js"></script>
-
-       <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeTlM2-93T2TwzAVf-tpTAoCxlfHGSnqc&v=weekly" defer></script>
 </html>

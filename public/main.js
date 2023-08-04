@@ -107,8 +107,6 @@ function display_marker(){
     boite_ext.push(markersignal_map);
     Map.setStreetView(panorama);
 
-      // Add a marker clusterer to manage the markers.
-
    markersignal_map.addListener("click", (event) => {
        infoWindow.close();
        Map.setZoom(20);
@@ -117,11 +115,8 @@ function display_marker(){
       infoWindow.open(markersignal_map.getMap(), markersignal_map);
     });
   }  
-  // markerCluster = new MarkerClusterer(Map, boite_ext,{gridSize: 20});
  }
-
-  });
-
+});
 
 tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], i) => {
       if(i==tourStops.length-1){ var last="Last WI-FI captued!";}
@@ -180,12 +175,103 @@ tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], 
     }
   });
 
+  var markerCluster = new MarkerClusterer(Map, boite_ext,{gridSize: 20,imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+  //markerCluster.setMap(null);
+  const minZoomToShowMarkers = 20;
+
+google.maps.event.addListener(Map, "zoom_changed", () => {
+  const currentZoom = Map.getZoom();
+  // Vérifiez si le niveau de zoom est supérieur ou égal à minZoomToShowMarkers
+  if (currentZoom < minZoomToShowMarkers) {
+    markerCluster.setMap(Map);
+  } else {
+    markerCluster.setMap(null);
+  }
+});
+
+
 }
-display_marker();
+//display_marker();
 
 setTimeout(()=>{
 google.maps.event.trigger(Map, 'resize');
 },5000)
+
+
+
+
+
+
+
+
+
+
+
+// let mapLoaded = false;
+// const markersPerPage = 2; // Nombre de markers à charger par page
+// let currentPage = 0; // Page de markers actuelle
+
+// // Événement pour détecter lorsque la carte est entièrement chargée
+// google.maps.event.addListenerOnce(Map, "idle", () => {
+//   mapLoaded = true;
+//   google.maps.event.trigger(Map, "bounds_changed"); // Déclencher manuellement l'événement bounds_changed une fois la carte chargée pour afficher les markers initiaux
+// });
+
+// // Événement pour le changement de région visible
+// google.maps.event.addListener(Map, "bounds_changed", () => {
+//   if (!mapLoaded) return; // Sortir de la fonction si la carte n'est pas encore complètement chargée
+
+//   // Récupérez les limites de la région visible à l'écran
+//   const bounds = Map.getBounds();
+
+//   // Filtrer les markers en fonction des limites de la région visible
+//   const markersInVisibleRegion = boite_ext.filter((marker) => {
+//     return bounds.contains(marker.getPosition());
+//   });
+
+//   // Calculez la plage de markers à afficher pour la page actuelle
+//   const startIndex = currentPage * markersPerPage;
+//   const endIndex = (currentPage + 1) * markersPerPage;
+
+//   // Affichez les markers de la page actuelle sur la carte
+//   markersInVisibleRegion.slice(startIndex, endIndex).forEach((marker) => {
+//     marker.setVisible(true);
+//   });
+
+//   // Masquez les markers des pages précédentes
+//   markersInVisibleRegion.slice(0, startIndex).forEach((marker) => {
+//     marker.setVisible(false);
+//   });
+
+//   // Masquez les markers des pages suivantes
+//   markersInVisibleRegion.slice(endIndex).forEach((marker) => {
+//     marker.setVisible(false);
+//   });
+// });
+
+
+// google.maps.event.trigger(Map, "bounds_changed");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 document.querySelectorAll(".view-security").forEach(box => {
   box.addEventListener('click',(etat)=>{
