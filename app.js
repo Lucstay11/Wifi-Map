@@ -4,7 +4,6 @@ const server = require("http").createServer(app);
 global.io = require("socket.io")(server);
 const upload = require("express-fileupload");
 const fs = require("fs");
-const parse = require("csv-parser");
 const PORT=2222;
 const path = require("path");
 const WifiFiles = path.join(__dirname,"wifi");
@@ -33,6 +32,9 @@ io.on("connection",(socket)=>{
 
 socket.on("change_csv",(file)=>{
   display_wifi("file",file,socket)
+})
+socket.on("search_db",(wifi)=>{
+  display_wifi("query",wifi,socket)
 })
 
 //Verify is database exist and display at the client web

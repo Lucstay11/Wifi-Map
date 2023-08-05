@@ -1,5 +1,4 @@
 var tourStops = [];
-var wifi = [];
 var WPA3=0;
 var WPA2=0;
 var WPA=0;
@@ -30,6 +29,9 @@ socket.on("list_wifi_file",(file)=>{
    })
 
 socket.on("csv",(WIFI)=>{
+    tourStops = [];
+    boite_ext=[];
+    boite_int=[];
     nb_wpa3.textContent="";
     nb_wpa2.textContent="";
     nb_wpa.textContent="";
@@ -42,13 +44,22 @@ socket.on("csv",(WIFI)=>{
     nb_open.textContent=WIFI[1][4];
     tourStops.push([{name_file:WIFI[0][0].name_file}]);
     nb_capture.textContent=WIFI[0].length-1;
-   //  for(i=1;i<WIFI[0].length-1;i++){
-   //   wifi.push([{ssid: WIFI[i]['Name'], mac: WIFI[i]['Address'], signal_level: WIFI[i]['Signal Level'], channel: WIFI[i]['Channel'], security: WIFI[i]['Security'],wps: WIFI[i]['WPS Support'], time_capture: WIFI[i]['Time'], lat: WIFI[i]['Latitude'], long: WIFI[i]['Longitude']}]);
-   //   }
+     for(i=1;i<10;i++){
+       boxwifidb.innerHTML+=`
+       <tr class="box-wifi">
+       <td><p>${WIFI[0][i][0]}</p><br><img height="20" src="img/channel.png">${WIFI[0][i][3]}</td>
+       <td><p>${WIFI[0][i][1].toUpperCase()}</p></td>
+       <td><p style="color:black;">${WIFI[0][i][4]}</p></td>
+       <td><p style="color:black;"><img height="20" src="img/level.gif">${WIFI[0][i][2]}</p></td>
+       <td><p style="color:black;">${WIFI[0][i][5]}</p></td>
+       <td><p style="color:black;"><img height="20" src="img/calender.png">${WIFI[0][i][6]}</p><button name="${WIFI[0][i][7]}" value="${WIFI[0][i][8]}" class="goposition btn btn-success btn-sn"><img height="20" src="img/streetview.png"></button></td>
+       </tr>
+      `;
+      }
 
          setTimeout(()=>{
-            for(i=0;i<WIFI[0].length-1;i++){
-            tourStops.push([{ lat: +WIFI[0][i][7], lng: +WIFI[0][i][8] },WIFI[0][i][0],WIFI[0][i][1],WIFI[0][i][2],WIFI[0][i][3],WIFI[0][i][4],WIFI[0][i][5],WIFI[0][i][6]]);
+            for(i=1;i<WIFI[0].length-1;i++){
+            tourStops.push([{ lat: +WIFI[0][i][8], lng: +WIFI[0][i][7] },WIFI[0][i][0],WIFI[0][i][1],WIFI[0][i][2],WIFI[0][i][3],WIFI[0][i][4],WIFI[0][i][5],WIFI[0][i][6]]);
             }
             initMap();
             map.style.opacity="1";
@@ -56,14 +67,25 @@ socket.on("csv",(WIFI)=>{
             },1000)  
 })
 
-//TODO CREATE QUERY TO DATABASE FILE
-// boxwifidb.innerHTML+=`
-//        <tr class="box-wifi">
-//        <td><p>${WIFI[0][i][0]}</p><br><img height="20" src="img/channel.png">${WIFI[0][i][3]}</td>
-//        <td><p>${WIFI[0][i][1].toUpperCase()}</p></td>
-//        <td><p style="color:black;">${WIFI[0][i][4]}</p></td>
-//        <td><p style="color:black;"><img height="20" src="img/level.gif">${WIFI[0][i][2]}</p></td>
-//        <td><p style="color:black;">${WIFI[0][i][5]}</p></td>
-//        <td><p style="color:black;"><img height="20" src="img/calender.png">${WIFI[0][i][6]}</p><button name="${WIFI[0][i][7]}" value="${WIFI[0][i][8]}" class="goposition btn btn-success btn-sn"><img height="20" src="img/streetview.png"></button></td>
-//        </tr>
-//       `;
+
+searchwifi.addEventListener("input",(e)=>{
+   boxwifidb.innerHTML="";
+   var wifi = e.target.value
+   var filter = filterdb.value
+   socket.emit("search_db",[wifi,filter]);
+})
+
+socket.on("wifi_database",(wifi)=>{
+   for(i=0;i<wifi.length;i++){
+      boxwifidb.innerHTML+=`
+      <tr class="box-wifi">
+      <td><p>${wifi[i][0]}</p><br><img height="20" src="img/channel.png">${wifi[i][3]}</td>
+      <td><p>${wifi[i][1].toUpperCase()}</p></td>
+      <td><p style="color:black;">${wifi[i][4]}</p></td>
+      <td><p style="color:black;"><img height="20" src="img/level.gif">${wifi[i][2]}</p></td>
+      <td><p style="color:black;">${wifi[i][5]}</p></td>
+      <td><p style="color:black;"><img height="20" src="img/calender.png">${wifi[i][6]}</p><button name="${wifi[i][7]}" value="${wifi[i][8]}" class="goposition btn btn-success btn-sn"><img height="20" src="img/streetview.png"></button></td>
+      </tr>
+     `;
+      }
+})

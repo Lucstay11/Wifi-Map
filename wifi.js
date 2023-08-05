@@ -3,7 +3,7 @@ const fs = require("fs");
 const { parse } = require("csv-parse");
 const folderPath = 'wifi/';
 
-function displayAllWifi(file) {
+function displayAllWifi() {
     let WPA3 = 0;
     let WPA2 = 0;
     let WPA = 0;
@@ -11,6 +11,8 @@ function displayAllWifi(file) {
     let OPEN = 0;
     let total = 0;
 
+    fs.readdir(folderPath, (err, files) => {
+    files.forEach((file) => {
     fs.createReadStream(folderPath + file)
       .pipe(parse({ delimiter: ',', from_line: 2 }))
       .on('data', function (row) {
@@ -42,15 +44,13 @@ function displayAllWifi(file) {
         console.log('OPEN: ' + OPEN);
         console.log('Total all Wifi: ' + total);
       });
+    })
+  })
 }
 
 function display_wifi(action, name,socket) {
   if (action == "all") {
-    fs.readdir(folderPath, (err, files) => {
-      files.forEach((file) => {
-         displayAllWifi(file);
-      });
-    });
+      displayAllWifi();
   }else if(action == "file") {
     let WPA3 = 0;
     let WPA2 = 0;
@@ -93,8 +93,19 @@ function display_wifi(action, name,socket) {
     }
     
     else if(action=="query"){
-      //TODO database wifi
-    }
+      var result = [];
+      
+      for(i=1;i<WIFI.length;i++){
+        filter=name[1]=="SSID"?WIFI[i][0]:WIFI[i][1];
+        var regex = /+$name[0]+/i;
+          if(regex.test(name[0])){
+            result.push(WIFI[i])
+          }
+         }
+       if(result.length>0){
+       io.to(socket.id).emit("wifi_database",result)
+       }
+     }
 }
 
 

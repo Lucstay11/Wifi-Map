@@ -179,19 +179,19 @@ tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], 
   //markerCluster.setMap(null);
   const minZoomToShowMarkers = 20;
 
-google.maps.event.addListener(Map, "zoom_changed", () => {
-  const currentZoom = Map.getZoom();
-  // Vérifiez si le niveau de zoom est supérieur ou égal à minZoomToShowMarkers
-  if (currentZoom < minZoomToShowMarkers) {
-    markerCluster.setMap(Map);
-  } else {
-    markerCluster.setMap(null);
-  }
-});
+// google.maps.event.addListener(Map, "zoom_changed", () => {
+//   const currentZoom = Map.getZoom();
+//   // Vérifiez si le niveau de zoom est supérieur ou égal à minZoomToShowMarkers
+//   if (currentZoom < minZoomToShowMarkers) {
+//     markerCluster.setMap(Map);
+//   } else {
+//     markerCluster.setMap(null);
+//   }
+// });
 
 
 }
-//display_marker();
+display_marker();
 
 setTimeout(()=>{
 google.maps.event.trigger(Map, 'resize');
@@ -342,7 +342,7 @@ wifidate.addEventListener('change',(etat)=>{
     setPanoramaOnAll(null)
     date_verif=etat.target.value;
     display_marker();
-    console.log(boite_int)
+    console.log(boite_ext)
    })
 
 
@@ -369,6 +369,7 @@ function ViewAllMarkers(){
 function HideAllMarkers(){
   setMapOnAll(null);
   setPanoramaOnAll(null)
+  //markerCluster.setMap(null);
   Btnviewallmarker.style.display="block";
   Btnhideallmarker.style.display="none";
 }
@@ -385,7 +386,7 @@ function HideAllMarkers(){
       map.style.border = "solid 1px lightgreen";
       const newPosition = new google.maps.LatLng({ lat: lat, lng: long });
       panorama.setPosition(newPosition);
-      Map.setCenter({ lat: lat, lng: long });
+      Map.setCenter({ lat: +lat, lng: +long });
       setTimeout(() => {
         map.style.border = "solid 0px lightgreen";
       }, 1000);

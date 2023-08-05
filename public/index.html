@@ -112,8 +112,13 @@ box-shadow:0px 0px 4px black;
                         </div>
 
                         <div class="card-body" style="overflow: hidden;">
+                             <input id="searchwifi" type="text" class="text-primary d-block m-auto">
+                             <select id="filterdb" class="btn btn-primary btn-icon-split btn-sm" style="display: block;margin:0 auto;box-shadow:0px 0px 4px black;">
+                              <option value="SSID">SSID</option>
+                              <option value="MAC">MAC</option>
+                            </select>
                             <div class="table-responsive text-primary" style="height: 1000px;">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <table class="table table-bordered" id="data" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
                                             <th>SSID & Channel</th>
