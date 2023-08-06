@@ -76,14 +76,14 @@ searchwifi.addEventListener("input",(e)=>{
    var filtername = filterdbname.value;
    var filtersecurity = filterdbsecurity.value;
    var filterwps = filterdbwps.value
-   socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps]);
+   socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,"all",""]);
    // if(wifi.length=="0" || boxwifidb.innerHTML==""){wifinbfound.textContent="0 found"}
    wifinbfound.textContent="0 found"
    btnlastlengthdb.style.display="none";
 })
 
-socket.on("wifi_database",(wifi,size)=>{
-   wifisize=wifi.length>=20?20:wifi.length;
+socket.on("wifi_database",(wifi,size,table)=>{
+   wifisize=wifi.length>20?20:wifi.length;
    btnlastlengthdb.style.display="block";
    boxwifidb.innerHTML="";
    for(i=0;i<wifisize;i++){
@@ -98,10 +98,28 @@ socket.on("wifi_database",(wifi,size)=>{
       </tr>
      `;
       }
-   wifinbfound.textContent=`${size} founds`
-   btnlastlengthdb.textContent=Math.round(wifi.length/20+1);
+   if(table!="nexttable"){
+   wifinbfound.textContent=`${size} founds`;
+   btnlastlengthdb.textContent=Math.round(wifi.length/20);
+   if(wifi.length>20){btnlastlengthdb.textContent++}
+   }
 })
 
-function show_db(){
+function show_db(action){
+   var wifi = searchwifi.value;
+   var filtername = filterdbname.value;
+   var filtersecurity = filterdbsecurity.value;
+   var filterwps = filterdbwps.value
 
+   if(action=="next"){
+      if(btnfirstlengthdb.textContent!=btnlastlengthdb.textContent){
+      socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,"table",btnfirstlengthdb.textContent]);
+      btnfirstlengthdb.textContent++;
+      }
+   }else{
+      if(btnfirstlengthdb.textContent!=1){
+      socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,"table",btnfirstlengthdb.textContent]);
+      btnfirstlengthdb.textContent--;
+      }
+   }
 }
