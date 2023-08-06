@@ -75,17 +75,20 @@ searchwifi.addEventListener("input",(e)=>{
    socket.emit("search_db",[wifi,filter]);
 })
 
-socket.on("wifi_database",(wifi)=>{
-   for(i=0;i<wifi.length;i++){
-      boxwifidb.innerHTML+=`
-      <tr class="box-wifi">
-      <td><p>${wifi[i][0]}</p><br><img height="20" src="img/channel.png">${wifi[i][3]}</td>
-      <td><p>${wifi[i][1].toUpperCase()}</p></td>
-      <td><p style="color:black;">${wifi[i][4]}</p></td>
-      <td><p style="color:black;"><img height="20" src="img/level.gif">${wifi[i][2]}</p></td>
-      <td><p style="color:black;">${wifi[i][5]}</p></td>
-      <td><p style="color:black;"><img height="20" src="img/calender.png">${wifi[i][6]}</p><button name="${wifi[i][7]}" value="${wifi[i][8]}" class="goposition btn btn-success btn-sn"><img height="20" src="img/streetview.png"></button></td>
-      </tr>
-     `;
-      }
+socket.on("wifi_database",(wifi,size)=>{
+   wifinbfound.textContent=`${size} founds`
+   // for(i=0;i<wifi.length;i++){
+   //    boxwifidb.innerHTML+=`
+   //    <tr class="box-wifi">
+   //    <td><p>${wifi[i][0]}</p><br><img height="20" src="img/channel.png">${wifi[i][3]}</td>
+   //    <td><p>${wifi[i][1].toUpperCase()}</p></td>
+   //    <td><p style="color:black;">${wifi[i][4]}</p></td>
+   //    <td><p style="color:black;"><img height="20" src="img/level.gif">${wifi[i][2]}</p></td>
+   //    <td><p style="color:black;">${wifi[i][5]}</p></td>
+   //    <td><p style="color:black;"><img height="20" src="img/calender.png">${wifi[i][6]}</p><button name="${wifi[i][7]}" value="${wifi[i][8]}" class="goposition btn btn-success btn-sn"><img height="20" src="img/streetview.png"></button></td>
+   //    </tr>
+   //   `;
+   //    }
+   console.log(wifi[0])
+
 })

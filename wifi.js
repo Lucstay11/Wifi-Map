@@ -94,16 +94,27 @@ function display_wifi(action, name,socket) {
     
     else if(action=="query"){
       var result = [];
-      
+      var totalfind=null;
+      if(name[0]!=""){
       for(i=1;i<WIFI.length;i++){
         filter=name[1]=="SSID"?WIFI[i][0]:WIFI[i][1];
-        var regex = /+$name[0]+/i;
-          if(regex.test(name[0])){
-            result.push(WIFI[i])
+
+        let regex = new RegExp('\\b' + name[0].replace(/\s+/g, '.*') + '\\b', 'i');
+        let find = WIFI[i].find(e => regex.test(e.toLowerCase()) || e.toLowerCase().startsWith(name[0].toLowerCase()));
+        if(find){
+          if (result.length === 0 || result[result.length - 1].length === 10) {
+            // Si le tableau WIFI est vide ou si le dernier sous-tableau a déjà 10 valeurs, ajoute un nouveau sous-tableau
+            result.push([WIFI[i]]);
+          } else {
+            // Sinon, ajoute les valeurs au dernier sous-tableau
+            result[result.length - 1].push(...WIFI[i]);
           }
+          totalfind++;
          }
+       }
+      }
        if(result.length>0){
-       io.to(socket.id).emit("wifi_database",result)
+       io.to(socket.id).emit("wifi_database",result,totalfind)
        }
      }
 }
