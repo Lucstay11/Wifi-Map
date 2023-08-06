@@ -112,14 +112,31 @@ box-shadow:0px 0px 4px black;
                         </div>
 
                         <div class="card-body" style="overflow: hidden;">
-                             <div style="display:flex;">
+                             <div style="display:flex;margin-bottom: 20px;">
                               <p id="wifinbfound"></p>
                              <input id="searchwifi" type="text" class="text-primary d-block m-auto">
                               </div>
-                             <select id="filterdb" class="btn btn-primary btn-icon-split btn-sm" style="display: block;margin:0 auto;box-shadow:0px 0px 4px black;">
+                            <div style="display: flex;">
+                              <p class="text-center">Search</p>
+                             <select id="filterdbname" class="btn btn-primary btn-icon-split btn-sm" style="height:20px;margin-left: 10px;box-shadow:0px 0px 4px black;">
                               <option value="SSID">SSID</option>
                               <option value="MAC">MAC</option>
                             </select>
+                            <p style="margin-left: 10px;">Filter</p>
+                            <select id="filterdbsecurity" class="btn btn-primary btn-icon-split btn-sm" style="height:20px;margin-left: 10px;box-shadow:0px 0px 4px black;">
+                              <option value="All">All</option>
+                              <option value="WPA3">WPA3</option>
+                              <option value="WPA2">WPA2</option>
+                              <option value="WPA">WPA</option>
+                              <option value="WEP">WEP</option>
+                              <option value="NONE">OPEN</option>
+                            </select>
+                            <select id="filterdbwps" class="btn btn-primary btn-icon-split btn-sm" style="height:20px;margin-right: 20px;box-shadow:0px 0px 4px black;">
+                              <option value="All">All</option>
+                              <option value="WPS">WPS</option>
+                              <option value="NO">NO</option>
+                            </select>
+                            </div>
                             <div class="table-responsive text-primary" style="height: 1000px;">
                                 <table class="table table-bordered" id="data" width="100%" cellspacing="0">
                                     <thead>
@@ -136,6 +153,13 @@ box-shadow:0px 0px 4px black;
                                       </tbody>
                                 </table>
                             </div>
+                        <div style="display: flex;justify-content: space-evenly;">
+                         <button class="btn btn-primary btn-icon-split btn-lg" style="min-width: 30px;">1</button>
+                          <button id="btnbeforedb" onclick="show_db('before')" class="btn btn-secondary btn-icon-split btn-lg" style="min-width: 30px;"><</button>
+                          <button id="btnnextdb" onclick="show_db('next')" class="btn btn-secondary btn-icon-split btn-lg" style="min-width: 30px;">></button>
+                         <button id="btnlastlengthdb" class="btn btn-primary btn-icon-split btn-lg" style="min-width: 30px;">0</button>
+                        </div>
+
  <div style="display:flex;">
  <img height="30" style="display:block;margin:0 auto;float:right;" src="img/add.png" onclick="uploadcsv.style.display='none';deletecsv.style.display='none';downloaddb.style.display='none';uploadcsv.style.display=uploadcsv.style.display=='block'?'none':'block'">
  <img height="30" style="display:block;margin:0 auto;float:left;" src="img/download.png" onclick="uploadcsv.style.display='none';deletecsv.style.display='none';downloaddb.style.display='none';downloaddb.style.display=downloaddb.style.display=='block'?'none':'block'">

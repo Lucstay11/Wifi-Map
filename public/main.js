@@ -334,6 +334,8 @@ selectcsv.addEventListener('change',(etat)=>{
   map.style.border="solid 0px green";
   boxwifidb.innerHTML="";
   nb_capture.textContent="";
+  searchwifi.value="";
+  wifinbfound.textContent="";
   socket.emit("change_csv",etat.target.value);
  }
 })
