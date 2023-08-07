@@ -98,7 +98,7 @@ socket.on("wifi_database",(wifi,size,table)=>{
       </tr>
      `;
       }
-   if(table!="nexttable"){
+   if(table!="table"){
    wifinbfound.textContent=`${size} founds`;
    btnlastlengthdb.textContent=Math.round(wifi.length/20);
    if(wifi.length>20){btnlastlengthdb.textContent++}
@@ -113,13 +113,13 @@ function show_db(action){
 
    if(action=="next"){
       if(btnfirstlengthdb.textContent!=btnlastlengthdb.textContent){
-      socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,"table",btnfirstlengthdb.textContent]);
+      socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,"table",btnfirstlengthdb.textContent,"plus"]);
       btnfirstlengthdb.textContent++;
       }
    }else{
       if(btnfirstlengthdb.textContent!=1){
-      socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,"table",btnfirstlengthdb.textContent]);
       btnfirstlengthdb.textContent--;
+      socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,"table",btnfirstlengthdb.textContent,"min"]);
       }
    }
 }

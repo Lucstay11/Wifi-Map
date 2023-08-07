@@ -97,11 +97,12 @@ function display_wifi(action, name,socket) {
       var totalfind = null;
       var filtersecurity = name[2]
       var filterwps = name[3]
-      var firstwifi = name[4]=="all"?1:name[5]*20;
-      var lastwifi = name[4]=="all"?WIFI.length:name[5]*20+20;
-      var actiontable = name[4]=="all"?"all":"nexttable";
+      var firstwifi = name[6]=="plus"?name[5]*20:name[5]*10;
+      var lastwifi = name[6]=="plus"?name[5]*20+20:name[5]*20;
+      var actiontable = name[4]=="all"?"all":"table";
+      firstwifi=firstwifi==10?1:firstwifi;
       if(name[0]!=""){
-      for(i=firstwifi;i<lastwifi;i++){
+      for(i=1;i<WIFI.length;i++){
         filter=name[1]=="SSID"?WIFI[i][0]:WIFI[i][1];
         let regex = new RegExp('\\b' + name[0].replace(/\s+/g, '.*') + '\\b', 'i');
         let find = WIFI[i].find(e => regex.test(e.toLowerCase()) || e.toLowerCase().startsWith(name[0].toLowerCase()));
@@ -126,8 +127,15 @@ function display_wifi(action, name,socket) {
        }
       }
        if(result.length>0){
-       io.to(socket.id).emit("wifi_database",result,totalfind,actiontable)
-       console.log(result.length)
+        if(actiontable=="all"){
+          io.to(socket.id).emit("wifi_database",result,totalfind,actiontable)
+        }else{
+          result=[];
+          for(i=firstwifi;i<lastwifi;i++){
+            result.push(WIFI[i])
+           }
+           io.to(socket.id).emit("wifi_database",result,totalfind,actiontable)
+        }
        }
      }
 }
