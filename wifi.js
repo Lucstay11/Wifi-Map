@@ -130,11 +130,11 @@ function display_wifi(action, name,socket) {
         if(actiontable=="all"){
           io.to(socket.id).emit("wifi_database",result,totalfind,actiontable)
         }else{
-          result=[];
+          tabres=[];
           for(i=firstwifi;i<lastwifi;i++){
-            result.push(WIFI[i])
+            tabres.push(result[i])
            }
-           io.to(socket.id).emit("wifi_database",result,totalfind,actiontable)
+           io.to(socket.id).emit("wifi_database",tabres,totalfind,actiontable)
         }
        }
      }
