@@ -153,12 +153,12 @@ box-shadow:0px 0px 4px black;
                                       </tbody>
                                 </table>
                             </div>
-                        <div style="display: flex;justify-content: space-evenly;">
-                         <button id="btnfirstlengthdb" class="btn btn-primary btn-icon-split btn-lg" style="min-width: 30px;">1</button>
-                          <button id="btnbeforedb" onclick="show_db('before')" class="btn btn-secondary btn-icon-split btn-lg" style="min-width: 30px;"><</button>
-                          <button id="btnnextdb" onclick="show_db('next')" class="btn btn-secondary btn-icon-split btn-lg" style="min-width: 30px;">></button>
-                         <button id="btnlastlengthdb" class="btn btn-primary btn-icon-split btn-lg" style="min-width: 30px;">0</button>
-                        </div>
+                            <div style="display: flex;align-items: center;justify-content: center;">
+                              <a id="btnfirstlengthdb" class="btn btn-primary btn-icon-split btn-lg" style="min-width: 30px;border-radius: 300px;">1</a>
+                               <a id="btnbeforedb" onclick="show_db('before')" class="btn btn-white btn-icon-split btn-lg" style="min-width: 30px;border-radius: 300px;"><img style="height: 30px;transform : rotate(-180deg);" src="img/next.png"></a>
+                               <a id="btnnextdb" onclick="show_db('next')" class="btn btn-white btn-icon-split btn-lg" style="min-width: 30px;border-radius: 300px;"><img style="height: 30px;" src="img/next.png"></a>
+                              <a id="btnlastlengthdb" class="btn btn-primary btn-icon-split btn-lg" style="min-width: 30px;border-radius: 300px;">0</a>
+                             </div>
 
  <div style="display:flex;">
  <img height="30" style="display:block;margin:0 auto;float:right;" src="img/add.png" onclick="uploadcsv.style.display='none';deletecsv.style.display='none';downloaddb.style.display='none';uploadcsv.style.display=uploadcsv.style.display=='block'?'none':'block'">

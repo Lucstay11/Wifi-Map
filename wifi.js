@@ -101,7 +101,7 @@ function display_wifi(action, name,socket) {
       var lastwifi = name[6]=="plus"?name[5]*20+20:name[5]*20;
       var actiontable = name[4]=="all"?"all":"table";
       firstwifi=firstwifi==10?1:firstwifi;
-      if(name[0]!=""){
+
       for(i=1;i<WIFI.length;i++){
         filter=name[1]=="SSID"?WIFI[i][0]:WIFI[i][1];
         let regex = new RegExp('\\b' + name[0].replace(/\s+/g, '.*') + '\\b', 'i');
@@ -125,7 +125,6 @@ function display_wifi(action, name,socket) {
            }
         }
        }
-      }
        if(result.length>0){
         if(actiontable=="all"){
           io.to(socket.id).emit("wifi_database",result,totalfind,actiontable)
