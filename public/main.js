@@ -19,13 +19,13 @@ function initMap(){
     });
 
   const marker_wifi_protected = {
-    url: "img/blue-marker.png",
+    url: "img/",
     size: new google.maps.Size(100, 70),
     origin: new google.maps.Point(0, 0),
     anchor: new google.maps.Point(0, 0),
   };
   const marker_wifi_open = {
-    url: "img/green-marker.png",
+    url: "img/",
     size: new google.maps.Size(100, 70),
     origin: new google.maps.Point(0, 0),
     anchor: new google.maps.Point(0, 0),
@@ -42,7 +42,7 @@ function initMap(){
   var panorama = new google.maps.StreetViewPanorama(
     document.getElementById("streetview"),
     {
-      addressControl: false,
+      //addressControl: false,
       position: { lat: lat, lng: long },
       pov: {
         heading: 34,
@@ -175,7 +175,7 @@ tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], 
     }
   });
 
-  var markerCluster = new MarkerClusterer(Map, boite_ext,{gridSize: 20,imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+  //var markerCluster = new MarkerClusterer(Map, boite_ext,{gridSize: 20,imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
   //markerCluster.setMap(null);
   const minZoomToShowMarkers = 20;
 

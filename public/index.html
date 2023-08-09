@@ -107,8 +107,9 @@ box-shadow:0px 0px 4px black;
              <img id="loadwififile" height="30" style="display:none;margin: 0 auto;" src="img/loading.gif">
 
          <div class="card shadow mb-4" id="card-database">
-                        <div style="display:flex;" class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary"><span id="nb_capture"></span> Captures</h6>
+                        <div style="display:block;" class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary" style="margin-left:100px;"><span id="nb_capture"></span> Captures</h6>
+                            <p class="m-0 font-weight-bold text-warning" style="font-size: 0.8em;">Last capture on</p><span id="nb_last_capture" style="font-size: 0.8em;"></span>
                         </div>
 
                         <div class="card-body" style="overflow: hidden;">
@@ -147,13 +148,14 @@ box-shadow:0px 0px 4px black;
                                             <th>Signal level</th>
                                             <th>WPS</th>
                                             <th>Date capture</th>
+                                            <th>Location</th>
                                         </tr>
                                     </thead>
                                       <tbody id="boxwifidb">
                                       </tbody>
                                 </table>
                             </div>
-                            <div style="display: flex;align-items: center;justify-content: center;">
+                            <div style="display: flex;align-items: center;justify-content: center;margin-bottom: 100px;">
                               <a id="btnfirstlengthdb" class="btn btn-primary btn-icon-split btn-lg" style="min-width: 30px;border-radius: 300px;">1</a>
                                <a id="btnbeforedb" onclick="show_db('before')" class="btn btn-white btn-icon-split btn-lg" style="min-width: 30px;border-radius: 300px;"><img style="height: 30px;transform : rotate(-180deg);" src="img/next.png"></a>
                                <a id="btnnextdb" onclick="show_db('next')" class="btn btn-white btn-icon-split btn-lg" style="min-width: 30px;border-radius: 300px;"><img style="height: 30px;" src="img/next.png"></a>

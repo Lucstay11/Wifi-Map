@@ -44,6 +44,7 @@ socket.on("csv",(WIFI)=>{
     nb_open.textContent=WIFI[1][4];
     tourStops.push([{name_file:WIFI[0][0].name_file}]);
     nb_capture.textContent=WIFI[0].length-1;
+    nb_last_capture.textContent=WIFI[2];
     btnlastlengthdb.textContent=Math.round(WIFI[0].length/20+1);
     wifisize=WIFI[0].length>=20?20:WIFI[0].length;
      for(i=1;i<wifisize;i++){
@@ -54,7 +55,8 @@ socket.on("csv",(WIFI)=>{
        <td><p style="color:black;">${WIFI[0][i][4]}</p></td>
        <td><p style="color:black;"><img height="20" src="img/level.gif">${WIFI[0][i][2]}</p></td>
        <td><p style="color:black;">${WIFI[0][i][5]}</p></td>
-       <td><p style="color:black;"><img height="20" src="img/calender.png">${WIFI[0][i][6]}</p><button name="${WIFI[0][i][7]}" value="${WIFI[0][i][8]}" class="goposition btn btn-success btn-sn"><img height="20" src="img/streetview.png"></button></td>
+       <td><p style="color:black;"><img height="20" src="img/calender.png">${WIFI[0][i][6]}</p></td>
+       <td><button name="${WIFI[0][i][7]}" value="${WIFI[0][i][8]}" class="goposition btn btn-success btn-sn"><img height="20" src="img/streetview.png"></button></td>
        </tr>
       `;
       }
@@ -76,7 +78,7 @@ searchwifi.addEventListener("input",(e)=>{
    var filtername = filterdbname.value;
    var filtersecurity = filterdbsecurity.value;
    var filterwps = filterdbwps.value
-   socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,"all",""]);
+   socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,"all",""],"api");
    // if(wifi.length=="0" || boxwifidb.innerHTML==""){wifinbfound.textContent="0 found"}
    wifinbfound.textContent="0 found"
    btnlastlengthdb.style.display="none";
@@ -94,7 +96,8 @@ socket.on("wifi_database",(wifi,size,table)=>{
       <td><p style="color:black;">${wifi[i][4]}</p></td>
       <td><p style="color:black;"><img height="20" src="img/level.gif">${wifi[i][2]}</p></td>
       <td><p style="color:black;">${wifi[i][5]}</p></td>
-      <td><p style="color:black;"><img height="20" src="img/calender.png">${wifi[i][6]}</p><button name="${wifi[i][7]}" value="${wifi[i][8]}" class="goposition btn btn-success btn-sn"><img height="20" src="img/streetview.png"></button></td>
+      <td><p style="color:black;"><img height="20" src="img/calender.png">${wifi[i][6]}</p></td>
+      <td><button name="${wifi[i][7]}" value="${wifi[i][8]}" class="goposition btn btn-success btn-sn"><img height="20" src="img/streetview.png"></button></td>
       </tr>
      `;
       }
@@ -112,14 +115,14 @@ function show_db(action){
    var filterwps = filterdbwps.value
 
    if(action=="next"){
-      if(btnfirstlengthdb.textContent!=btnlastlengthdb.textContent){
-      socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,"table",btnfirstlengthdb.textContent,"plus"]);
+      if(btnfirstlengthdb.textContent!=btnlastlengthdb.textContent && btnlastlengthdb.style.display!="none"){
+      socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,"table",btnfirstlengthdb.textContent,"plus"],"api");
       btnfirstlengthdb.textContent++;
       }
    }else{
       if(btnfirstlengthdb.textContent!=1){
       btnfirstlengthdb.textContent--;
-      socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,"table",btnfirstlengthdb.textContent,"min"]);
+      socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,"table",btnfirstlengthdb.textContent,"min"],"api");
       }
    }
 }

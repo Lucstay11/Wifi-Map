@@ -2,6 +2,7 @@
 const fs = require("fs");
 const { parse } = require("csv-parse");
 const folderPath = 'wifi/';
+require('colors');
 
 function displayAllWifi() {
     let WPA3 = 0;
@@ -10,6 +11,7 @@ function displayAllWifi() {
     let WEP = 0;
     let OPEN = 0;
     let total = 0;
+    let lastdatecapture = "";
 
     fs.readdir(folderPath, (err, files) => {
     files.forEach((file) => {
@@ -35,20 +37,22 @@ function displayAllWifi() {
             OPEN++;
             break;
         }
+        lastdatecapture = row[6];
       })
       .on('end', () => {
-        console.log('WPA3: ' + WPA3);
-        console.log('WPA2: ' + WPA2);
-        console.log('WPA: ' + WPA);
-        console.log('WEP: ' + WEP);
-        console.log('OPEN: ' + OPEN);
-        console.log('Total all Wifi: ' + total);
+        console.log('WPA3 :'.bgBlue +" "+ WPA3.toString().bgGreen);
+        console.log('WPA2 :'.bgBlue +" "+ WPA2.toString().bgGreen);
+        console.log('WPA  :'.bgBlue +" "+ WPA.toString().bgGreen);
+        console.log('WEP  :'.bgBlue +" "+ WEP.toString().bgGreen);
+        console.log('OPEN :'.bgBlue +" "+ OPEN.toString().bgGreen);
+        console.log("Total all Wifi : ".bgYellow + total.toString().bgYellow);
+        console.log("Last capture at : ".bgMagenta + lastdatecapture.bgRed)
       });
     })
   })
 }
 
-function display_wifi(action, name,socket) {
+function display_wifi(action, name,socket,method) {
   if (action == "all") {
       displayAllWifi();
   }else if(action == "file") {
@@ -58,6 +62,7 @@ function display_wifi(action, name,socket) {
     let WEP = 0;
     let OPEN = 0;
     let total = 0;
+    let lastdatecapture = "";
     WIFI = [{name_file: name}];
     fs.createReadStream(folderPath + name)
       .pipe(parse({
@@ -84,11 +89,12 @@ function display_wifi(action, name,socket) {
             OPEN++;
             break;
         }
+        lastdatecapture = data[6].split(" ")[1]+" "+data[6].split(" ")[0];
         WIFI.push(data)
       })
       .on('end', () => {
         const TotalSecurity = [WPA3, WPA2, WPA, WEP, OPEN];
-        io.to(socket.id).emit("csv",[WIFI,TotalSecurity])
+        io.to(socket.id).emit("csv",[WIFI,TotalSecurity,lastdatecapture])
       });  
     }
     
@@ -101,6 +107,8 @@ function display_wifi(action, name,socket) {
       var lastwifi = name[6]=="plus"?name[5]*20+20:name[5]*20;
       var actiontable = name[4]=="all"?"all":"table";
       firstwifi=firstwifi==10?1:firstwifi;
+
+       if(method!="api"){
 
       for(i=1;i<WIFI.length;i++){
         filter=name[1]=="SSID"?WIFI[i][0]:WIFI[i][1];
@@ -125,6 +133,28 @@ function display_wifi(action, name,socket) {
            }
         }
        }
+      }else{
+        const url = 'https://api.wigle.net/api/v2/stats/countries';
+        const username = 'AID29fc21c646b4104e1cada5b468dc0aeb';
+        const password = '5d9590ecc1c1cbdc5d4447670f4b64fe';
+
+        const headers = {
+        'Accept': 'application/json',
+        'Authorization': `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`
+        };
+
+       fetch(url, { method: 'GET', headers })
+      .then(response => {
+       if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+       }
+       return response.json();
+      })
+      .then(data => {
+       console.log(data);
+      })
+     }
+
        if(result.length>0){
         if(actiontable=="all"){
           io.to(socket.id).emit("wifi_database",result,totalfind,actiontable)
