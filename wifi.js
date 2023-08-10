@@ -1,6 +1,7 @@
 // Console display of the total number of wifi networks and their security
 const fs = require("fs");
 const { parse } = require("csv-parse");
+const { api } = require('./api');
 const folderPath = 'wifi/';
 require('colors');
 
@@ -53,6 +54,7 @@ function displayAllWifi() {
 }
 
 function display_wifi(action, name,socket,method) {
+  let API_RESULT = ["salut"];
   if (action == "all") {
       displayAllWifi();
   }else if(action == "file") {
@@ -64,6 +66,8 @@ function display_wifi(action, name,socket,method) {
     let total = 0;
     let lastdatecapture = "";
     WIFI = [{name_file: name}];
+    var p=api("totalwifi")
+    
     fs.createReadStream(folderPath + name)
       .pipe(parse({
        separator: ',',
@@ -94,7 +98,7 @@ function display_wifi(action, name,socket,method) {
       })
       .on('end', () => {
         const TotalSecurity = [WPA3, WPA2, WPA, WEP, OPEN];
-        io.to(socket.id).emit("csv",[WIFI,TotalSecurity,lastdatecapture])
+        io.to(socket.id).emit("csv",[WIFI,TotalSecurity,lastdatecapture],p)
       });  
     }
     
@@ -134,30 +138,12 @@ function display_wifi(action, name,socket,method) {
         }
        }
       }else{
-        const url = 'https://api.wigle.net/api/v2/stats/countries';
-        const username = 'AID29fc21c646b4104e1cada5b468dc0aeb';
-        const password = '5d9590ecc1c1cbdc5d4447670f4b64fe';
-
-        const headers = {
-        'Accept': 'application/json',
-        'Authorization': `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`
-        };
-
-       fetch(url, { method: 'GET', headers })
-      .then(response => {
-       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-       }
-       return response.json();
-      })
-      .then(data => {
-       console.log(data);
-      })
-     }
+        
+      }
 
        if(result.length>0){
         if(actiontable=="all"){
-          io.to(socket.id).emit("wifi_database",result,totalfind,actiontable)
+          io.to(socket.id).emit("wifi_database",result,totalfind,actiontable,API_RESULT)
         }else{
           tabres=[];
           for(i=firstwifi;i<lastwifi;i++){

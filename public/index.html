@@ -86,12 +86,12 @@ box-shadow:0px 0px 4px black;
           <button id="Btnhideallmarker" class="btn bg-gradient-secondary btn-icon-split btn-sm text-white">Hide all markers</button>
            <hr>
            <p class="center"><img height="20" src="img/calender.png">Show wifi networks discovered since</p>
-           <input id="wifidate" type="date">
+           <input id="wifidate" type="date" class="bg-gradient-primary text-dark">
         </div> 
          </div>
          <img src="img/chevron-down.png" height="30" style="display:block;margin:0 auto;" onclick="setwifi.style.display=setwifi.style.display=='block'?'none':'block'">
      </div>
-     <div class="card mb-4">
+     <div class="card">
                  <div class="card-header py-3 text-center">
                       <button onclick="street_view();" class="btn btn-success btn-icon-split btn-sm">
                            <span class="icon text-white-50">
@@ -101,16 +101,52 @@ box-shadow:0px 0px 4px black;
                        </button>
                   </div>
      </div>
-     <p class="text-center"><img src="img/database.png" height="40">Wifi Database</p>
+    <div id="contboxstatus" style="display: flex;justify-content: space-between;align-items: center;box-shadow: 0px 0px 8px black;" class="bg-gradient-primary text-dark" >
+     <div id="boxnavcsv" style="flex: 1;">
+     <p class="text-center text-white"><img src="img/database.png" height="40">Your Wifi Database</p>
+       <div style="display: flex;">
         <select id="selectcsv" onclick="btndwn.href=`/${this.value}`" class="listfilewifi btn btn-primary btn-icon-split btn-sm" style="display: block;margin:0 auto;box-shadow:0px 0px 4px black;">
         </select>
-             <img id="loadwififile" height="30" style="display:none;margin: 0 auto;" src="img/loading.gif">
+          <img id="loadwififile" height="20" style="display:none;" src="img/loading.gif">
+       </div>
+      </div>
+      <div id="boxnavapi" style="display: none;flex: 1;">
+        <p class="text-center text-white"><img src="img/world.png" height="40">World Wifi Database</p>
+      </div>
 
+      <div id="statusboxnav" class="bg-gradient-success text-dark" style="padding: 20px;" onclick="change_status_db()">
+        <img src="img/world.png" height="50">
+      </div>
+    </div>
          <div class="card shadow mb-4" id="card-database">
-                        <div style="display:block;" class="card-header py-3">
+                        <div id="boxheadcsv" style="display:block;text-align: center;" class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary" style="margin-left:100px;"><span id="nb_capture"></span> Captures</h6>
                             <p class="m-0 font-weight-bold text-warning" style="font-size: 0.8em;">Last capture on</p><span id="nb_last_capture" style="font-size: 0.8em;"></span>
                         </div>
+
+                        <div id="boxheadapi" style="display: none;">
+                        <div style="display:block;text-align: center;" class="card-header py-3">
+                          <h6 class="m-0 font-weight-bold text-secondary" style="margin-left:100px;"><span id="nb_total_wifi_api"></span> Captures</h6>
+                        </div>
+                        <div class="bg-gradient-success text-dark">
+                          <div id="showstatapi" style="display:none;" class="text-center">
+                               <div class="card" style="width: 100%;transition:all 2s;">
+                               <div class="card-header" onclick='this.classList.add("btn", "btn-success", "btn-icon-split", "btn-sm")'><img height="20" src="img/wifi-gauge.png">View only</div>
+                           <ul class="list-group list-group-flush">
+                           <li class="list-group-item view-security" onclick="this.style.textDecoration=this.style.textDecoration=='line-through'?'none':'line-through'">WPA3<img height="20" src="img/blue-marker.png"></li>
+                           <li class="list-group-item view-security" onclick="this.style.textDecoration=this.style.textDecoration=='line-through'?'none':'line-through'">WPA2<img height="20" src="img/blue-marker.png"></li>
+                           <li class="list-group-item view-security" onclick="this.style.textDecoration=this.style.textDecoration=='line-through'?'none':'line-through'">WPA<img height="20" src="img/blue-marker.png"></li>
+                           <li class="list-group-item view-security" onclick="this.style.textDecoration=this.style.textDecoration=='line-through'?'none':'line-through'">WEP<img height="20" src="img/red-marker.png"></li>
+                           <li class="list-group-item view-security" onclick="this.style.textDecoration=this.style.textDecoration=='line-through'?'none':'line-through'">OPEN<img height="20" src="img/green-marker.png"></li>
+                           </ul>
+                         </div> 
+                          </div>
+                          <img src="img/chevron-down.png" height="30" style="display:block;margin:0 auto;" onclick="showstatapi.style.display=showstatapi.style.display=='block'?'none':'block'">
+                        </div> 
+                      </div>
+
+
+
 
                         <div class="card-body" style="overflow: hidden;">
                              <div style="display:flex;margin-bottom: 20px;">
@@ -137,7 +173,25 @@ box-shadow:0px 0px 4px black;
                               <option value="WPS">WPS</option>
                               <option value="NO">NO</option>
                             </select>
+                            
+                            <div id="boxfilterlocation" style="display: none;">
+                              <div class="d-flex d-none">
+                              <p class="text-center" style="margin-left: 10px;margin-right: 10px;">Country</p>
+                              <select id="filterdbcountry" class="btn btn-success btn-icon-split btn-sm" style="height:20px;box-shadow:0px 0px 4px black;">
+                                <option value="All">All</option>
+                                <option value="WPS">WPS</option>
+                                <option value="NO">NO</option>
+                              </select>
+                              <p class="text-center" style="margin-left: 10px;margin-right: 10px;">Postal code</p>
+                              <input id="filterdbpostal" class="btn btn-success btn-icon-split btn-sm" style="height:20px;width: 60px;" type="number">
+                              <p class="text-center" style="margin-left: 10px;margin-right: 10px;">Street</p>
+                              <input id="filterdbstreet" class="btn btn-success btn-icon-split btn-sm" style="height:20px;" type="text">
+                              <p class="text-center" style="margin-left: 10px;margin-right: 10px;">N°</p>
+                              <input id="filterdbstreetnumber" class="btn btn-success btn-icon-split btn-sm" style="height:20px;width: 60px;" type="number">
+                              </div>
                             </div>
+                            </div>
+                            
                             <div class="table-responsive text-primary" style="height: 1000px;">
                                 <table class="table table-bordered" id="data" width="100%" cellspacing="0">
                                     <thead>
@@ -157,8 +211,8 @@ box-shadow:0px 0px 4px black;
                             </div>
                             <div style="display: flex;align-items: center;justify-content: center;margin-bottom: 100px;">
                               <a id="btnfirstlengthdb" class="btn btn-primary btn-icon-split btn-lg" style="min-width: 30px;border-radius: 300px;">1</a>
-                               <a id="btnbeforedb" onclick="show_db('before')" class="btn btn-white btn-icon-split btn-lg" style="min-width: 30px;border-radius: 300px;"><img style="height: 30px;transform : rotate(-180deg);" src="img/next.png"></a>
-                               <a id="btnnextdb" onclick="show_db('next')" class="btn btn-white btn-icon-split btn-lg" style="min-width: 30px;border-radius: 300px;"><img style="height: 30px;" src="img/next.png"></a>
+                               <a id="btnbeforedb" onclick="show_page_db('before')" class="btn btn-white btn-icon-split btn-lg" style="min-width: 30px;border-radius: 300px;"><img style="height: 30px;transform : rotate(-180deg);" src="img/next.png"></a>
+                               <a id="btnnextdb" onclick="show_page_db('next')" class="btn btn-white btn-icon-split btn-lg" style="min-width: 30px;border-radius: 300px;"><img style="height: 30px;" src="img/next.png"></a>
                               <a id="btnlastlengthdb" class="btn btn-primary btn-icon-split btn-lg" style="min-width: 30px;border-radius: 300px;">0</a>
                              </div>
 

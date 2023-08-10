@@ -1,16 +1,2 @@
-curl 'https://api.wigle.net/api/v2/network/search?netid=&ssid=d&latrange1=37.7494&latrange2=37.7495&longrange1=-122.4033&longrange2=-122.4031&lastupdt=' \
-  -H 'Accept: application/json, text/javascript, */*; q=0.01' \
-  -H 'Accept-Language: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7' \
-  -H 'Connection: keep-alive' \
-  -H 'Content-Type: application/json' \
-  -H 'Cookie: phpbb3_apcj6_u=1; phpbb3_apcj6_k=; __ssid=492dc91993554823438e3dfc5c9bc51; phpbb3_apcj6_sid=385b927b6f6d5e5f774a15ff5468ac18; auth=tuesbanni1234%3A676544925%3A1691549306%3A1aU%2FHWL2seeqtCp9sJyvGw' \
-  -H 'Origin: https://wigle.net' \
-  -H 'Referer: https://wigle.net/' \
-  -H 'Sec-Fetch-Dest: empty' \
-  -H 'Sec-Fetch-Mode: cors' \
-  -H 'Sec-Fetch-Site: same-site' \
-  -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36' \
-  -H 'sec-ch-ua: "Chromium";v="115", "Not/A)Brand";v="99"' \
-  -H 'sec-ch-ua-mobile: ?0' \
-  -H 'sec-ch-ua-platform: "Linux"' \
-  --compressed
+curl https://api.wigle.net//api/v2/stats/countries
+curl https://api.wigle.net//api/v2/stats/regions?country=BE

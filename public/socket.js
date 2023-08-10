@@ -1,3 +1,4 @@
+var country = ["US", "DE", "GB", "CA", "NL", "AU", "JP", "RU", "FR", "ES", "PL", "CN", "IT", "CH", "BR", "SE", "BE", "CZ", "AR", "MX", "DK", "UA", "HU", "NO", "AT", "FI", "NZ", "TW", "PT", "SG", "GR", "RO", "ID", "IN", "ZA", "CL", "KR", "TR", "TH", "PH", "BG", "IE", "MY", "SK", "HR", "AE", "LT", "BY", "LV", "RS", "KZ", "SI", "VN", "IL", "EE", "CO", "TT", "BO", "CR", "SA", "PE", "IS", "UY", "LU", "GE", "IR", "BD", "PY", "VE", "JO", "CY", "MT", "DO", "BA", "EC", "PA", "QA", "GT", "EG", "PK", "KW", "AM", "MA", "KH", "OM", "ME", "UZ", "MD", "SV", "AL", "DZ", "MK", "IQ", "NG", "LB", "TN", "HN", "NP", "JE", "KE", "BH", "KG", "MN", "LK", "NI", "MC", "BS", "YE", "SY", "GI", "AD", "MM", "JM", "XK", "KY", "BM", "FO", "BB", "GH", "CU", "LA", "GM", "BZ", "TZ", "LI", "ET", "SM", "IM", "SR", "GG", "AZ", "PS", "ZM", "FJ", "MU", "SN", "NA", "KN", "GL", "BN", "AO", "LC", "CI", "LY", "FM", "ML", "UG", "ZW", "CV", "SD", "AF", "RW", "AG", "NE", "DJ", "SC", "GA", "GD", "BF", "VG", "PG", "BW", "HT", "MZ", "VU", "SO", "TM", "DM", "BI", "TJ", "GY", "VA", "TD", "WS", "TC", "SZ", "MG", "CK", "GN", "TL", "BJ", "VC", "CM", "TG", "MR", "PW", "MV", "LS", "MH", "BT", "TO", "KP", "CD", "MW", "GQ", "CG", "LR", "FK", "SB", "SS", "KM", "SL", "CF", "KI", "EH", "ER", "GW", "MS", "GS", "AI", "ST", "TK"];
 var tourStops = [];
 var WPA3=0;
 var WPA2=0;
@@ -28,7 +29,9 @@ socket.on("list_wifi_file",(file)=>{
    }
    })
 
-socket.on("csv",(WIFI)=>{
+socket.on("csv",(WIFI,API)=>{
+    console.log(API)
+    nb_total_wifi_api.textContent=API
     tourStops = [];
     boite_ext=[];
     boite_int=[];
@@ -79,12 +82,12 @@ searchwifi.addEventListener("input",(e)=>{
    var filtersecurity = filterdbsecurity.value;
    var filterwps = filterdbwps.value
    socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,"all",""],"api");
-   // if(wifi.length=="0" || boxwifidb.innerHTML==""){wifinbfound.textContent="0 found"}
    wifinbfound.textContent="0 found"
    btnlastlengthdb.style.display="none";
 })
 
-socket.on("wifi_database",(wifi,size,table)=>{
+socket.on("wifi_database",(wifi,size,table,API)=>{
+   console.log(API)
    wifisize=wifi.length>20?20:wifi.length;
    btnlastlengthdb.style.display="block";
    boxwifidb.innerHTML="";
@@ -108,7 +111,7 @@ socket.on("wifi_database",(wifi,size,table)=>{
    }
 })
 
-function show_db(action){
+function show_page_db(action){
    var wifi = searchwifi.value;
    var filtername = filterdbname.value;
    var filtersecurity = filterdbsecurity.value;
@@ -125,4 +128,29 @@ function show_db(action){
       socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,"table",btnfirstlengthdb.textContent,"min"],"api");
       }
    }
+}
+
+function change_status_db(){
+    if(boxnavapi.style.display=="none"){
+      boxnavapi.style.display="block";
+      boxnavcsv.style.display="none";
+      boxheadapi.style.display="block";
+      boxheadcsv.style.display="none";
+      contboxstatus.classList.add("bg-gradient-success");
+      statusboxnav.classList.remove("bg-gradient-success");
+      statusboxnav.classList.add("bg-gradient-primary");
+      document.querySelector("#statusboxnav > img").src="img/database.png";
+      boxfilterlocation.style.display="block";
+    }else{
+      boxnavapi.style.display="none";
+      boxnavcsv.style.display="block";
+      boxheadapi.style.display="none";
+      boxheadcsv.style.display="block";
+      contboxstatus.classList.remove("bg-gradient-success");
+      statusboxnav.classList.remove("bg-gradient-primary");
+      statusboxnav.classList.add("bg-gradient-success");
+      document.querySelector("#statusboxnav > img").src="img/world.png";
+      boxfilterlocation.style.display="none";
+    }
+    boxwifidb.innerHTML="";
 }
