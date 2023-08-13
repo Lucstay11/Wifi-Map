@@ -1,4 +1,4 @@
-var country = ["US", "DE", "GB", "CA", "NL", "AU", "JP", "RU", "FR", "ES", "PL", "CN", "IT", "CH", "BR", "SE", "BE", "CZ", "AR", "MX", "DK", "UA", "HU", "NO", "AT", "FI", "NZ", "TW", "PT", "SG", "GR", "RO", "ID", "IN", "ZA", "CL", "KR", "TR", "TH", "PH", "BG", "IE", "MY", "SK", "HR", "AE", "LT", "BY", "LV", "RS", "KZ", "SI", "VN", "IL", "EE", "CO", "TT", "BO", "CR", "SA", "PE", "IS", "UY", "LU", "GE", "IR", "BD", "PY", "VE", "JO", "CY", "MT", "DO", "BA", "EC", "PA", "QA", "GT", "EG", "PK", "KW", "AM", "MA", "KH", "OM", "ME", "UZ", "MD", "SV", "AL", "DZ", "MK", "IQ", "NG", "LB", "TN", "HN", "NP", "JE", "KE", "BH", "KG", "MN", "LK", "NI", "MC", "BS", "YE", "SY", "GI", "AD", "MM", "JM", "XK", "KY", "BM", "FO", "BB", "GH", "CU", "LA", "GM", "BZ", "TZ", "LI", "ET", "SM", "IM", "SR", "GG", "AZ", "PS", "ZM", "FJ", "MU", "SN", "NA", "KN", "GL", "BN", "AO", "LC", "CI", "LY", "FM", "ML", "UG", "ZW", "CV", "SD", "AF", "RW", "AG", "NE", "DJ", "SC", "GA", "GD", "BF", "VG", "PG", "BW", "HT", "MZ", "VU", "SO", "TM", "DM", "BI", "TJ", "GY", "VA", "TD", "WS", "TC", "SZ", "MG", "CK", "GN", "TL", "BJ", "VC", "CM", "TG", "MR", "PW", "MV", "LS", "MH", "BT", "TO", "KP", "CD", "MW", "GQ", "CG", "LR", "FK", "SB", "SS", "KM", "SL", "CF", "KI", "EH", "ER", "GW", "MS", "GS", "AI", "ST", "TK"];
+var country = [];
 var tourStops = [];
 var WPA3=0;
 var WPA2=0;
@@ -94,9 +94,8 @@ searchwifi.addEventListener("input",(e)=>{
 })
 
 socket.on("wifi_database",(wifi,size,table,method)=>{
-   console.log(size)
-   // wifisize=wifi.length>20?20:wifi.length;
    wifisize=method=="api"?wifi[0].length:wifi.length;
+   wifisize=wifisize>20?20:wifisize
    btnlastlengthdb.style.display="none";
    boxwifidb.innerHTML="";
    for(i=0;i<wifisize;i++){
