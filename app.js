@@ -4,6 +4,7 @@ const server = require("http").createServer(app);
 global.io = require("socket.io")(server);
 const upload = require("express-fileupload");
 const fs = require("fs");
+const ejs = require('ejs');
 const PORT=2222;
 const path = require("path");
 const WifiFiles = path.join(__dirname,"wifi");
@@ -13,9 +14,10 @@ var WifiFile=""; // Enter a file if you prefer to manually display this database
 
 app.use(upload());
 app.use(express.static('public'));
-app.get('/',(req,res)=>{
-     res.sendFile(`${__dirname}/public/index.html`);
-});
+ app.get('/',(req,res)=>{
+   res.render(`${__dirname}/public/index.ejs`);
+ });
+
 
 app.get("/:file(*)",(req,res)=>{
   res.download(req.params.file,{root:WifiFiles},(err)=>{
