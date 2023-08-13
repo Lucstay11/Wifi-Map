@@ -11,9 +11,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@700&family=Montserrat:ital,wght@1,300;1,400&family=Roboto:wght@300&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/jpg" href="img/Wifi-logo.png"  sizes="400x400"/>
+    <link rel="icon" type="image/jpg" href="img/wifi-gauge.png"  sizes="400x400"/>
     <link href="src/map.min.css" rel="stylesheet" type="text/css">
     <link href="src/all.min.css" rel="stylesheet" type="text/css">
+    <script src="src/jquery-3.3.1.slim.min.js"></script>
+    <script src="src/bootstrap.min.js"></script>
     <title>Wifi Map</title>
 
 <style>
@@ -56,7 +58,7 @@ box-shadow:0px 0px 4px black;
 <div id="test"></div>
      <div id="map" style="transition:all 2s;height:80%;opacity:0.1;"></div>
      <div id="streetview" style="display:none;transition: border 1s;height:60%;"></div>
-     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+     <!-- <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script> -->
      <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeTlM2-93T2TwzAVf-tpTAoCxlfHGSnqc&v=weekly" defer></script>
      <script src="/socket.io/socket.io.js"></script>
@@ -126,19 +128,20 @@ box-shadow:0px 0px 4px black;
 
                         <div id="boxheadapi" style="display: none;">
                         <div style="display:block;text-align: center;" class="card-header py-3">
-                          <h6 class="m-0 font-weight-bold text-secondary" style="margin-left:100px;"><span id="nb_total_wifi_api"></span> Captures</h6>
+                          <h6>The world's largest wifi database</h6>
+                          <h8 class="m-0 font-weight-bold text-secondary" style="margin-left:100px;"><img src="img/wifi-gauge.png" height="30"><span id="nb_total_wifi_api"></span> Captures</h8>
                         </div>
                         <div class="bg-gradient-success text-dark">
                           <div id="showstatapi" style="display:none;" class="text-center">
                                <div class="card" style="width: 100%;transition:all 2s;">
-                               <div class="card-header" onclick='this.classList.add("btn", "btn-success", "btn-icon-split", "btn-sm")'><img height="20" src="img/wifi-gauge.png">View only</div>
-                           <ul class="list-group list-group-flush">
-                           <li class="list-group-item view-security" onclick="this.style.textDecoration=this.style.textDecoration=='line-through'?'none':'line-through'">WPA3<img height="20" src="img/blue-marker.png"></li>
-                           <li class="list-group-item view-security" onclick="this.style.textDecoration=this.style.textDecoration=='line-through'?'none':'line-through'">WPA2<img height="20" src="img/blue-marker.png"></li>
-                           <li class="list-group-item view-security" onclick="this.style.textDecoration=this.style.textDecoration=='line-through'?'none':'line-through'">WPA<img height="20" src="img/blue-marker.png"></li>
-                           <li class="list-group-item view-security" onclick="this.style.textDecoration=this.style.textDecoration=='line-through'?'none':'line-through'">WEP<img height="20" src="img/red-marker.png"></li>
-                           <li class="list-group-item view-security" onclick="this.style.textDecoration=this.style.textDecoration=='line-through'?'none':'line-through'">OPEN<img height="20" src="img/green-marker.png"></li>
-                           </ul>
+                               <div class="card-header"><h4>Country list</h4></div>
+                           <div id="accordion" class="list-group list-group-flush" style="overflow: auto;height: 500px;">
+                           </div>
+
+
+
+
+
                          </div> 
                           </div>
                           <img src="img/chevron-down.png" height="30" style="display:block;margin:0 auto;" onclick="showstatapi.style.display=showstatapi.style.display=='block'?'none':'block'">
@@ -151,7 +154,7 @@ box-shadow:0px 0px 4px black;
                         <div class="card-body" style="overflow: hidden;">
                              <div style="display:flex;margin-bottom: 20px;">
                               <p id="wifinbfound"></p>
-                             <input id="searchwifi" type="text" class="text-primary d-block m-auto">
+                             <input id="searchwifi" type="text" class="text-primary d-block m-auto border border-primary">
                               </div>
                             <div style="display: flex;">
                               <p class="text-center">Search</p>
@@ -275,11 +278,9 @@ box-shadow:0px 0px 4px black;
          </div>
        </footer>
 
-       <script src="src/jquery-3.5.1.js"></script>
        <script src="src/jquery.dataTables.min.js"></script>
-       <script src="src/dataTables.bootstrap4.min.js"></script>
-       <script src="src/datatables-demo.js"></script>
        <script src="socket.js"></script>
        <script src="main.js"></script>
        <script src="src/style-map.js"></script>
+       <script src="geocode.js"></script>
 </html>

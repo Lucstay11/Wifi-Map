@@ -141,6 +141,7 @@ function change_status_db(){
       statusboxnav.classList.add("bg-gradient-primary");
       document.querySelector("#statusboxnav > img").src="img/database.png";
       boxfilterlocation.style.display="block";
+      displayboxcountry()
     }else{
       boxnavapi.style.display="none";
       boxnavcsv.style.display="block";
