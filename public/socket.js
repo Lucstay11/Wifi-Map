@@ -5,6 +5,8 @@ var WPA2=0;
 var WPA=0;
 var WEP=0;
 var OPEN=0;
+var action_query="csv";
+
 
 
 socket.on("nb_live",(nb)=>{
@@ -30,7 +32,6 @@ socket.on("list_wifi_file",(file)=>{
    })
 
 socket.on("csv",(WIFI,API)=>{
-    console.log(API)
     nb_total_wifi_api.textContent=API
     tourStops = [];
     boite_ext=[];
@@ -81,17 +82,25 @@ searchwifi.addEventListener("input",(e)=>{
    var filtername = filterdbname.value;
    var filtersecurity = filterdbsecurity.value;
    var filterwps = filterdbwps.value
-   socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,"all",""],"api");
+   var filtercountry = filterdbcountry.value;
+   var filterpostal = filterdbpostal.value;
+   var filterstreet = filterdbstreet.value;
+   var filterstreetnb = filterdbstreetnumber.value
+   if(action_query=="csv"){
+   socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,filtercountry,filterpostal,filterstreet,filterstreetnb,{viewtable:"all",indextable: btnfirstlengthdb.textContent,actiontable: "",action:"csv"}]);
    wifinbfound.textContent="0 found"
-   btnlastlengthdb.style.display="none";
+   }
+   btnlastlengthdb.style.display="none"; 
 })
 
-socket.on("wifi_database",(wifi,size,table,API)=>{
-   console.log(API)
-   wifisize=wifi.length>20?20:wifi.length;
-   btnlastlengthdb.style.display="block";
+socket.on("wifi_database",(wifi,size,table,method)=>{
+   console.log(size)
+   // wifisize=wifi.length>20?20:wifi.length;
+   wifisize=method=="api"?wifi[0].length:wifi.length;
+   btnlastlengthdb.style.display="none";
    boxwifidb.innerHTML="";
    for(i=0;i<wifisize;i++){
+      if(boxnavapi.style.display=="none"){
       boxwifidb.innerHTML+=`
       <tr class="box-wifi">
       <td><p>${wifi[i][0]}</p><br><img height="20" src="img/channel.png">${wifi[i][3]}</td>
@@ -103,35 +112,72 @@ socket.on("wifi_database",(wifi,size,table,API)=>{
       <td><button name="${wifi[i][7]}" value="${wifi[i][8]}" class="goposition btn btn-success btn-sn"><img height="20" src="img/streetview.png"></button></td>
       </tr>
      `;
+      }else{
+        if(boxnavapi.style.display=="none"){return}
+        boxwifidb.innerHTML+=`
+        <tr class="box-wifi">
+        <td><p>${wifi[0][i].ssid}</p><br><img height="20" src="img/channel.png">${wifi[0][i].channel}</td>
+        <td><p>${wifi[0][i].netid.toUpperCase()}</p></td>
+        <td><p style="color:black;">${wifi[0][i].encryption}</p></td>
+        <td><p style="font-size:0.8em;" class="text-primary">${wifi[0][i].firsttime.slice(0, -8)}</p></td>
+        <td><p style="font-size:0.8em;" class="text-primary">${wifi[0][i].lasttime.slice(0, -8)}</p></td>
+        <td><p style="font-size:0.8em;" class="text-primary">${wifi[0][i].lastupdt.slice(0, -8)}</p></td>
+         <td><img height="20" src="img/house.png">
+         ${wifi[0][i].country}, ${wifi[0][i].region},${wifi[0][i].city},${wifi[0][i].postalcode}  ${wifi[0][i].road}  ${wifi[0][i].housenumber}
+         <button name="${wifi[0][i].trilat}" value="${wifi[0][i].trilong}" class="goposition btn btn-success btn-sn"><img height="20" src="img/streetview.png"></button>
+         </td>
+        </td> 
+        </tr>
+       `;
       }
+   }
+
    if(table!="table"){
    wifinbfound.textContent=`${size} founds`;
    btnlastlengthdb.textContent=Math.round(wifi.length/20);
-   if(wifi.length>20){btnlastlengthdb.textContent++}
+   if(wifi.length>20){btnlastlengthdb.textContent++; btnlastlengthdb.style.display="block";}
    }
 })
 
-function show_page_db(action){
-   var wifi = searchwifi.value;
+
+function searchapi(){
    var filtername = filterdbname.value;
    var filtersecurity = filterdbsecurity.value;
    var filterwps = filterdbwps.value
+   var filtercountry = filterdbcountry.value;
+   var filterpostal = filterdbpostal.value;
+   var filterstreet = filterdbstreet.value;
+   var filterstreetnb = filterdbstreetnumber.value
+   socket.emit("search_db",[searchwifi.value,filtername,filtersecurity,filterwps,filtercountry,filterpostal,filterstreet,filterstreetnb,{viewtable:"all",indextable: btnfirstlengthdb.textContent,actiontable: "",action:"api"}]);
 
+}
+
+function show_page_db(action){
+   var filtername = filterdbname.value;
+   var filtersecurity = filterdbsecurity.value;
+   var filterwps = filterdbwps.value
+   var filtercountry = filterdbcountry.value;
+   var filterpostal = filterdbpostal.value;
+   var filterstreet = filterdbstreet.value;
+   var filterstreetnb = filterdbstreetnumber.value
    if(action=="next"){
       if(btnfirstlengthdb.textContent!=btnlastlengthdb.textContent && btnlastlengthdb.style.display!="none"){
-      socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,"table",btnfirstlengthdb.textContent,"plus"],"api");
+      socket.emit("search_db",[searchwifi.value,filtername,filtersecurity,filterwps,filtercountry,filterpostal,filterstreet,filterstreetnb,{viewtable:"table",indextable: btnfirstlengthdb.textContent,actiontable: "plus",action:"csv"}]);
       btnfirstlengthdb.textContent++;
       }
    }else{
       if(btnfirstlengthdb.textContent!=1){
       btnfirstlengthdb.textContent--;
-      socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,"table",btnfirstlengthdb.textContent,"min"],"api");
+      socket.emit("search_db",[searchwifi.value,filtername,filtersecurity,filterwps,filtercountry,filterpostal,filterstreet,filterstreetnb,{viewtable:"table",indextable: btnfirstlengthdb.textContent,actiontable: "min",action:"csv"}]);
       }
    }
 }
 
 function change_status_db(){
     if(boxnavapi.style.display=="none"){
+      wifinbfound.textContent="";
+      searchwifi.value="";
+      action_query="api";
       boxnavapi.style.display="block";
       boxnavcsv.style.display="none";
       boxheadapi.style.display="block";
@@ -141,8 +187,14 @@ function change_status_db(){
       statusboxnav.classList.add("bg-gradient-primary");
       document.querySelector("#statusboxnav > img").src="img/database.png";
       boxfilterlocation.style.display="block";
+      btnsearchdb.style.display="block";
+      infotablecsv.style.display="none";
+      infotableapi.style.display="block";
       displayboxcountry()
     }else{
+      wifinbfound.textContent="";
+      searchwifi.value="";
+      action_query="csv";
       boxnavapi.style.display="none";
       boxnavcsv.style.display="block";
       boxheadapi.style.display="none";
@@ -152,6 +204,9 @@ function change_status_db(){
       statusboxnav.classList.add("bg-gradient-success");
       document.querySelector("#statusboxnav > img").src="img/world.png";
       boxfilterlocation.style.display="none";
+      btnsearchdb.style.display="none";
+      infotablecsv.style.display="block";
+      infotableapi.style.display="none";
     }
     boxwifidb.innerHTML="";
 }

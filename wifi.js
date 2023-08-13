@@ -1,7 +1,6 @@
 // Console display of the total number of wifi networks and their security
 const fs = require("fs");
 const { parse } = require("csv-parse");
-const { api } = require('./api');
 const folderPath = 'wifi/';
 require('colors');
 
@@ -54,7 +53,6 @@ function displayAllWifi() {
 }
 
 function display_wifi(action, name,socket,method) {
-  let API_RESULT = ["salut"];
   if (action == "all") {
       displayAllWifi();
   }else if(action == "file") {
@@ -66,7 +64,6 @@ function display_wifi(action, name,socket,method) {
     let total = 0;
     let lastdatecapture = "";
     WIFI = [{name_file: name}];
-    var p=api("totalwifi")
     
     fs.createReadStream(folderPath + name)
       .pipe(parse({
@@ -98,7 +95,7 @@ function display_wifi(action, name,socket,method) {
       })
       .on('end', () => {
         const TotalSecurity = [WPA3, WPA2, WPA, WEP, OPEN];
-        io.to(socket.id).emit("csv",[WIFI,TotalSecurity,lastdatecapture],p)
+        io.to(socket.id).emit("csv",[WIFI,TotalSecurity,lastdatecapture])
       });  
     }
     
@@ -107,9 +104,13 @@ function display_wifi(action, name,socket,method) {
       var totalfind = null;
       var filtersecurity = name[2]
       var filterwps = name[3]
-      var firstwifi = name[6]=="plus"?name[5]*20:name[5]*10;
-      var lastwifi = name[6]=="plus"?name[5]*20+20:name[5]*20;
-      var actiontable = name[4]=="all"?"all":"table";
+      var filtercountry = name[4]
+      var filterpostal = name[5]
+      var filterstreet = name[6]
+      var filterstreetnb = name[7]
+      var firstwifi = name[8].actiontable=="plus"?name[8].indextable*20:name[8].indextable*10;
+      var lastwifi = name[8].actiontable=="plus"?name[8].indextable*20+20:name[8].indextable*20;
+      var actiontable = name[8].viewtable=="all"?"all":"table";
       firstwifi=firstwifi==10?1:firstwifi;
 
        if(method!="api"){
@@ -120,10 +121,10 @@ function display_wifi(action, name,socket,method) {
         let find = WIFI[i].find(e => regex.test(e.toLowerCase()) || e.toLowerCase().startsWith(name[0].toLowerCase()));
 
         if(find){
-          if(filtersecurity=="All" && filterwps=="All"){
+          if(filtersecurity=="" && filterwps=="All"){
             result.push(WIFI[i])
             totalfind++
-           }else if(filtersecurity!="All"){
+           }else if(filtersecurity!=""){
              if(WIFI[i][4]==filtersecurity){
               result.push(WIFI[i])
               totalfind++
@@ -138,18 +139,35 @@ function display_wifi(action, name,socket,method) {
         }
        }
       }else{
-        
+        const url = `https://api.wigle.net/api/v2/network/search?country=${filtercountry}&postalCode=${filterpostal}&ssid=${name[0]}&encryption=${filtersecurity}&road=${filterstreet}&houseNumber=${filterstreetnb}`;
+        const username = 'AID29fc21c646b4104e1cada5b468dc0aeb';
+        const password = '5d9590ecc1c1cbdc5d4447670f4b64fe';
+        const headers = {
+        'Accept': 'application/json',
+        'Authorization': `Basic ${Buffer.from(`${username}:${password}`).toString('base64')}`
+        };
+
+       fetch(url, { method: 'GET', headers })
+      .then(response => response.json())
+      .then(data => {
+            if(data.success==false){
+                return;
+             }
+           totalfind=data.totalResults
+           result.push(data.results)
+           io.to(socket.id).emit("wifi_database",result,totalfind,actiontable,"api")
+      })
       }
 
        if(result.length>0){
         if(actiontable=="all"){
-          io.to(socket.id).emit("wifi_database",result,totalfind,actiontable,API_RESULT)
+          io.to(socket.id).emit("wifi_database",result,totalfind,actiontable,"csv")
         }else{
           tabres=[];
           for(i=firstwifi;i<lastwifi;i++){
             tabres.push(result[i])
            }
-           io.to(socket.id).emit("wifi_database",tabres,totalfind,actiontable)
+           io.to(socket.id).emit("wifi_database",tabres,totalfind,actiontable,"csv")
         }
        }
      }

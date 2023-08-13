@@ -5,7 +5,7 @@ fetch("https://api.wigle.net//api/v2/stats/site")
 
 
 function displayboxregion(country, index, size) {
-    let timeoutId; // Variable pour stocker l'identifiant du timeout
+    let timeoutId;
     clearTimeout(timeoutId);
     document.querySelectorAll(".boxregion").forEach(box => box.innerHTML="")
     if (document.querySelector(`#boxcountryregion${size}`).textContent.trim().length == 0) {
@@ -70,6 +70,7 @@ fetch("https://api.wigle.net//api/v2/stats/countries")
         const accordion = document.getElementById('accordion');
         data.countries.forEach((d, i) => {
             const country = d.country;
+            filterdbcountry.innerHTML+=`<option value="${country}">${country}</option>`
             accordion.innerHTML += `
                 <div class="card" data-country="${country}" data-id="${i}" onclick="displayboxregion(this.dataset.country,this.dataset.id,${i});">
                     <div class="card-header bg-gradient-success text-white" id="heading${i}">

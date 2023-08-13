@@ -33,8 +33,8 @@ io.on("connection",(socket)=>{
 socket.on("change_csv",(file)=>{
   display_wifi("file",file,socket)
 })
-socket.on("search_db",(wifi,method)=>{
-  display_wifi("query",wifi,socket,method)
+socket.on("search_db",(wifi)=>{
+  display_wifi("query",wifi,socket,wifi[8].action)
 })
 
 //Verify is database exist and display at the client web

@@ -137,11 +137,6 @@ box-shadow:0px 0px 4px black;
                                <div class="card-header"><h4>Country list</h4></div>
                            <div id="accordion" class="list-group list-group-flush" style="overflow: auto;height: 500px;">
                            </div>
-
-
-
-
-
                          </div> 
                           </div>
                           <img src="img/chevron-down.png" height="30" style="display:block;margin:0 auto;" onclick="showstatapi.style.display=showstatapi.style.display=='block'?'none':'block'">
@@ -152,9 +147,10 @@ box-shadow:0px 0px 4px black;
 
 
                         <div class="card-body" style="overflow: hidden;">
-                             <div style="display:flex;margin-bottom: 20px;">
+                             <div style="display:flex;margin-bottom: 20px;align-items: center;">
                               <p id="wifinbfound"></p>
-                             <input id="searchwifi" type="text" class="text-primary d-block m-auto border border-primary">
+                             <input id="searchwifi" type="text" class="text-primary d-block m-auto border border-primary" style="flex: 1;">
+                             <button id="btnsearchdb" style="display: none;" class="btn btn-primary btn-icon-split btn-sm" onclick="searchapi()"><img height="25" src="img/search.png"></button>
                               </div>
                             <div style="display: flex;">
                               <p class="text-center">Search</p>
@@ -164,7 +160,7 @@ box-shadow:0px 0px 4px black;
                             </select>
                             <p style="margin-left: 10px;">Filter</p>
                             <select id="filterdbsecurity" class="btn btn-primary btn-icon-split btn-sm" style="height:20px;margin-left: 10px;box-shadow:0px 0px 4px black;">
-                              <option value="All">All</option>
+                              <option value="">All</option>
                               <option value="WPA3">WPA3</option>
                               <option value="WPA2">WPA2</option>
                               <option value="WPA">WPA</option>
@@ -176,28 +172,29 @@ box-shadow:0px 0px 4px black;
                               <option value="WPS">WPS</option>
                               <option value="NO">NO</option>
                             </select>
-                            
+                            </div>
+
                             <div id="boxfilterlocation" style="display: none;">
-                              <div class="d-flex d-none">
+                              <div style="display: flex;">
                               <p class="text-center" style="margin-left: 10px;margin-right: 10px;">Country</p>
-                              <select id="filterdbcountry" class="btn btn-success btn-icon-split btn-sm" style="height:20px;box-shadow:0px 0px 4px black;">
-                                <option value="All">All</option>
-                                <option value="WPS">WPS</option>
-                                <option value="NO">NO</option>
+                              <select id="filterdbcountry" class="btn btn-primary btn-icon-split btn-sm" style="height:20px;box-shadow:0px 0px 4px black;">
                               </select>
                               <p class="text-center" style="margin-left: 10px;margin-right: 10px;">Postal code</p>
-                              <input id="filterdbpostal" class="btn btn-success btn-icon-split btn-sm" style="height:20px;width: 60px;" type="number">
+                              <input id="filterdbpostal" class="btn btn-primary btn-icon-split btn-sm" style="height:20px;width: 60px; margin: 0;" type="number">
+                              </div>
+                              <div style="display: flex;">
                               <p class="text-center" style="margin-left: 10px;margin-right: 10px;">Street</p>
-                              <input id="filterdbstreet" class="btn btn-success btn-icon-split btn-sm" style="height:20px;" type="text">
+                              <input id="filterdbstreet" class="btn-primary btn-icon-split btn-sm" style="height:20px; margin: 0;" type="text">
                               <p class="text-center" style="margin-left: 10px;margin-right: 10px;">N°</p>
-                              <input id="filterdbstreetnumber" class="btn btn-success btn-icon-split btn-sm" style="height:20px;width: 60px;" type="number">
+                              <input id="filterdbstreetnumber" class="btn btn-primary btn-icon-split btn-sm" style="height:20px;width: 60px; margin: 0;" type="number">
                               </div>
                             </div>
-                            </div>
+
+
                             
                             <div class="table-responsive text-primary" style="height: 1000px;">
                                 <table class="table table-bordered" id="data" width="100%" cellspacing="0">
-                                    <thead>
+                                    <thead id="infotablecsv">
                                         <tr>
                                             <th>SSID & Channel</th>
                                             <th>Mac adress</th>
@@ -207,6 +204,17 @@ box-shadow:0px 0px 4px black;
                                             <th>Date capture</th>
                                             <th>Location</th>
                                         </tr>
+                                    </thead>
+                                    <thead id="infotableapi" style="display: none;">
+                                        <tr>
+                                          <th>SSID & Channel</th>
+                                          <th>Mac adress</th>
+                                          <th>Security</th>
+                                          <th>First time</th>
+                                          <th>Last time</th>
+                                          <th>Last update</th>
+                                          <th>Location</th>
+                                      </tr>
                                     </thead>
                                       <tbody id="boxwifidb">
                                       </tbody>
