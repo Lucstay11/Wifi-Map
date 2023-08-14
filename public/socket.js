@@ -96,7 +96,6 @@ searchwifi.addEventListener("input",(e)=>{
 socket.on("wifi_database",(wifi,size,table,method)=>{
    wifisize=method=="api"?wifi[0].length:wifi.length;
    wifisize=wifisize>20?20:wifisize
-   btnlastlengthdb.style.display="none";
    boxwifidb.innerHTML="";
    for(i=0;i<wifisize;i++){
       if(boxnavapi.style.display=="none"){
