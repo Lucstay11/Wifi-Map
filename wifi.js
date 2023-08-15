@@ -139,7 +139,8 @@ function display_wifi(action, name,socket,method) {
         }
        }
       }else{
-        const url = `https://api.wigle.net/api/v2/network/search?country=${filtercountry}&postalCode=${filterpostal}&ssid=${name[0]}&encryption=${filtersecurity}&road=${filterstreet}&houseNumber=${filterstreetnb}`;
+        if(name[8].actiontable=="plus"){var idnextpage=`&searchAfter=${name[8].idnextpage}`}else{idnextpage=""}
+        const url = `https://api.wigle.net/api/v2/network/search?country=${filtercountry}&postalCode=${filterpostal}&ssid=${name[0]}&encryption=${filtersecurity}&road=${filterstreet}&houseNumber=${filterstreetnb}${idnextpage}`;
         const username = 'AID29fc21c646b4104e1cada5b468dc0aeb';
         const password = '5d9590ecc1c1cbdc5d4447670f4b64fe';
         const headers = {
@@ -151,11 +152,13 @@ function display_wifi(action, name,socket,method) {
       .then(response => response.json())
       .then(data => {
             if(data.success==false){
+              io.to(socket.id).emit("wifi_database",result,totalfind,actiontable,"api","error")
                 return;
              }
+           idnextpage=data.searchAfter;
            totalfind=data.totalResults
            result.push(data.results)
-           io.to(socket.id).emit("wifi_database",result,totalfind,actiontable,"api")
+           io.to(socket.id).emit("wifi_database",result,totalfind,actiontable,"api",idnextpage)
       })
       }
 

@@ -6,7 +6,7 @@ var WPA=0;
 var WEP=0;
 var OPEN=0;
 var action_query="csv";
-
+var stockage_api=[];
 
 
 socket.on("nb_live",(nb)=>{
@@ -93,9 +93,17 @@ searchwifi.addEventListener("input",(e)=>{
    btnlastlengthdb.style.display="none"; 
 })
 
-socket.on("wifi_database",(wifi,size,table,method)=>{
+socket.on("wifi_database",(wifi,size,table,method,idapi)=>{
+   if(method=="api" && idapi=="error"){
+       infoapi.textContent="Api error: too many queries today!";
+       loaddb.style.display="none";
+      return  
+   }
+
    wifisize=method=="api"?wifi[0].length:wifi.length;
-   wifisize=wifisize>20?20:wifisize
+   indexwifi=method=="api"?Math.round(size/100):Math.round(wifi.length/20);
+   wifisize=wifisize>20?20:wifisize;
+   wifisize=method=="api"?wifi[0].length:wifisize;
    boxwifidb.innerHTML="";
    for(i=0;i<wifisize;i++){
       if(boxnavapi.style.display=="none"){
@@ -132,13 +140,18 @@ socket.on("wifi_database",(wifi,size,table,method)=>{
 
    if(table!="table"){
    wifinbfound.textContent=`${size} founds`;
-   btnlastlengthdb.textContent=Math.round(wifi.length/20);
-   if(wifi.length>20){btnlastlengthdb.textContent++; btnlastlengthdb.style.display="block";}
+   btnlastlengthdb.textContent=indexwifi;
+   if(wifi.length>20||wifi[0].length>20){btnlastlengthdb.textContent++;btnlastlengthdb.style.display="block";}
+   }
+   if(method=="api" && btnfirstlengthdb.textContent > stockage_api.length){
+      stockage_api.push(boxwifidb.innerHTML)
+      btnlastlengthdb.name=idapi;
+      loaddb.style.display="none";
    }
 })
 
-
 function searchapi(){
+   stockage_api=[];
    var filtername = filterdbname.value;
    var filtersecurity = filterdbsecurity.value;
    var filterwps = filterdbwps.value
@@ -146,6 +159,8 @@ function searchapi(){
    var filterpostal = filterdbpostal.value;
    var filterstreet = filterdbstreet.value;
    var filterstreetnb = filterdbstreetnumber.value
+   if(searchwifi.value==""){return}
+   loaddb.style.display="block";
    socket.emit("search_db",[searchwifi.value,filtername,filtersecurity,filterwps,filtercountry,filterpostal,filterstreet,filterstreetnb,{viewtable:"all",indextable: btnfirstlengthdb.textContent,actiontable: "",action:"api"}]);
 
 }
@@ -160,14 +175,28 @@ function show_page_db(action){
    var filterstreetnb = filterdbstreetnumber.value
    if(action=="next"){
       if(btnfirstlengthdb.textContent!=btnlastlengthdb.textContent && btnlastlengthdb.style.display!="none"){
-      socket.emit("search_db",[searchwifi.value,filtername,filtersecurity,filterwps,filtercountry,filterpostal,filterstreet,filterstreetnb,{viewtable:"table",indextable: btnfirstlengthdb.textContent,actiontable: "plus",action:"csv"}]);
-      btnfirstlengthdb.textContent++;
+         if(action_query=="csv"){
+         socket.emit("search_db",[searchwifi.value,filtername,filtersecurity,filterwps,filtercountry,filterpostal,filterstreet,filterstreetnb,{viewtable:"table",indextable: btnfirstlengthdb.textContent,actiontable: "plus",action:"csv"}]);
+         }else{
+            if(btnfirstlengthdb.textContent < stockage_api.length){
+            boxwifidb.innerHTML=stockage_api[btnfirstlengthdb.textContent];
+            }
+            else{
+               loaddb.style.display="block";   
+               socket.emit("search_db",[searchwifi.value,filtername,filtersecurity,filterwps,filtercountry,filterpostal,filterstreet,filterstreetnb,{viewtable:"table",indextable: btnfirstlengthdb.textContent,actiontable: "plus",action:"api",idnextpage: btnlastlengthdb.name}]);
+            }
+         }
+         btnfirstlengthdb.textContent++;
       }
    }else{
       if(btnfirstlengthdb.textContent!=1){
       btnfirstlengthdb.textContent--;
+      if(action_query=="csv"){
       socket.emit("search_db",[searchwifi.value,filtername,filtersecurity,filterwps,filtercountry,filterpostal,filterstreet,filterstreetnb,{viewtable:"table",indextable: btnfirstlengthdb.textContent,actiontable: "min",action:"csv"}]);
-      }
+      }else{
+            boxwifidb.innerHTML=stockage_api[btnfirstlengthdb.textContent-1];
+        }
+    }
    }
 }
 
@@ -205,6 +234,9 @@ function change_status_db(){
       btnsearchdb.style.display="none";
       infotablecsv.style.display="block";
       infotableapi.style.display="none";
+      btnlastlengthdb.style.display="none";
+      infoapi.textContent="";
+      loaddb.style.display="none";  
     }
     boxwifidb.innerHTML="";
 }
