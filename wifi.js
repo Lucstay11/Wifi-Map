@@ -1,6 +1,7 @@
 // Console display of the total number of wifi networks and their security
 const fs = require("fs");
 const { parse } = require("csv-parse");
+const fetch = require("node-fetch");
 const folderPath = 'wifi/';
 require('colors');
 
