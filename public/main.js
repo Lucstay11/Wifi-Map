@@ -6,7 +6,7 @@ var date_verif = "";
 
 
 
-function initMap(){
+function initMap(View){ // display wifi file csv or wifi api 
 
  const sv = new google.maps.StreetViewService();
 
@@ -60,7 +60,7 @@ function initMap(){
 
 
 function display_marker(){
-
+ if(View=="csv"){
   tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], i) => {
       if(i==tourStops.length-1){ var last="Last WI-FI captued!";}
               else{var last="";}
@@ -179,6 +179,126 @@ tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], 
   //markerCluster.setMap(null);
   const minZoomToShowMarkers = 20;
 
+}else{
+  tourStops.forEach(([position,SSID,MAC_ADRESS,CHANNEL,SECURITY,FIRSTTIME,LASTTIME,LASTUPDT,ADRESS], i) => {
+    var icon_marker=SECURITY=="NONE"?marker_wifi_open:marker_wifi_protected;
+    if(SECURITY=="WEP"){icon_marker=marker_wifi_wep;}
+    var icon_security=SECURITY=="NONE"?"open-wifi.png":"lock.png";
+    date_verif=date_verif==""?dateNow:date_verif;
+
+  if(Wifi_Security.includes(SECURITY)){
+     if(true){
+      if(SECURITY=="NONE"){SECURITY="Open"}
+    const markersignal_map = new google.maps.Marker({
+    position,
+    Map: Map,
+    icon: icon_marker,
+    animation: google.maps.Animation.DROP,
+    title:`
+    <div style="height:200px;width:200px;">
+    <p class="text-warning" style="font-size:0.9em;text-align:center;">${LASTTIME}</p>
+    <p style="text-align:center;color:black;font-weight:900;"><img height="30" src="img/wifi-gauge.png"> ${SSID}</p>
+       <p style="text-align:center;">${MAC_ADRESS}</p>
+      <p style="font-size:0.7em;text-align:center;"><img height="20" src="img/infrastructure.png"></p>
+      <hr>
+    <div style="display:flex;justify-content:space-between;">
+    <p><img height="30" src="img/${icon_security}">${SECURITY}</p>
+    <p style="color:black;"><img height="20" src="img/level.gif"></p>
+    <p><img height="20" src="img/channel.png"> ${CHANNEL}</p>
+    </div><br>
+      <div style="display:flex;">
+       <p><img height="20" src="img/house.png">${ADRESS}</p>
+      </div>
+      <hr>
+    <p style="text-align:center;"><img height="20" src="img/calender.png">Capture Date</p>
+      <p style="text-align:center;">${FIRSTTIME}</p>
+      <p style="text-align:center;">${LASTTIME}</p>
+      <p style="text-align:center;">${LASTUPDT}</p>
+    </div>
+    `,
+     label: {
+      text: `${SSID}`,
+      color: 'white',
+      fontSize: "10px"
+     },
+    optimized: false,
+  });
+
+  boite_ext.push(markersignal_map);
+  Map.setStreetView(panorama);
+
+ markersignal_map.addListener("click", (event) => {
+     infoWindow.close();
+     Map.setZoom(20);
+     Map.setCenter(markersignal_map.getPosition());
+    infoWindow.setContent(markersignal_map.getTitle());
+    infoWindow.open(markersignal_map.getMap(), markersignal_map);
+  });
+}  
+}
+});
+
+tourStops.forEach(([position,SSID,MAC_ADRESS,CHANNEL,SECURITY,FIRSTTIME,LASTTIME,LASTUPDT,ADRESS], i) => {
+    var icon_marker=SECURITY=="None"?marker_wifi_open:marker_wifi_protected;
+    if(SECURITY=="WEP"){icon_marker=marker_wifi_wep;}
+    var icon_security=SECURITY=="None"?"open-wifi.png":"lock.png";
+    SECURITY=SECURITY=="None"?"Open":SECURITY;
+
+    
+  if(Wifi_Security.includes(SECURITY)){
+  const markersignal_map = new google.maps.Marker({
+    position,
+    Map: panorama,
+    icon: icon_marker,
+    animation: google.maps.Animation.DROP,
+    title:`
+    <div style="height:200px;width:200px;">
+    <p class="text-warning" style="font-size:0.9em;text-align:center;">${LASTTIME}</p>
+    <p style="text-align:center;color:black;font-weight:900;"><img height="30" src="img/wifi-gauge.png"> ${SSID}</p>
+       <p style="text-align:center;">${MAC_ADRESS}</p>
+      <p style="font-size:0.7em;text-align:center;"><img height="20" src="img/infrastructure.png"></p>
+      <hr>
+    <div style="display:flex;justify-content:space-between;">
+    <p><img height="30" src="img/${icon_security}">${SECURITY}</p>
+    <p style="color:black;"><img height="20" src="img/level.gif">${SIGNAL}</p>
+    <p><img height="20" src="img/channel.png"> ${CHANNEL}</p>
+    </div><br>
+      <div style="display:flex;">
+       <p><img height="20" src="img/house.png">${ADRESS}</p>
+      </div>
+      <hr>
+    <p style="text-align:center;"><img height="20" src="img/calender.png">Capture Date</p>
+      <p style="text-align:center;">${FIRSTTIME}</p>
+      <p style="text-align:center;">${LASTTIME}</p>
+      <p style="text-align:center;">${LASTUPDT}</p>
+    </div>
+    `,
+     label: {
+      text: `${SSID}`,
+      color: 'white',
+      fontSize: "10px"
+     },
+    optimized: false,
+  });
+     
+  boite_int.push(markersignal_map);
+Map.setStreetView(panorama);
+
+ markersignal_map.addListener("click", (event) => {
+     infoWindow.close();
+     Map.setZoom(18);
+     Map.setCenter(markersignal_map.getPosition());
+     infoWindow.setContent(markersignal_map.getTitle());
+     infoWindow.open(markersignal_map.getMap(), markersignal_map);
+
+  });
+  }
+});
+
+//var markerCluster = new MarkerClusterer(Map, boite_ext,{gridSize: 20,imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+//markerCluster.setMap(null);
+//const minZoomToShowMarkers = 20;
+
 // google.maps.event.addListener(Map, "zoom_changed", () => {
 //   const currentZoom = Map.getZoom();
 //   // Vérifiez si le niveau de zoom est supérieur ou égal à minZoomToShowMarkers
@@ -188,7 +308,7 @@ tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], 
 //     markerCluster.setMap(null);
 //   }
 // });
-
+}
 
 }
 display_marker();

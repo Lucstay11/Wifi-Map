@@ -69,7 +69,7 @@ socket.on("csv",(WIFI,API)=>{
             for(i=1;i<WIFI[0].length-1;i++){
             tourStops.push([{ lat: +WIFI[0][i][8], lng: +WIFI[0][i][7] },WIFI[0][i][0],WIFI[0][i][1],WIFI[0][i][2],WIFI[0][i][3],WIFI[0][i][4],WIFI[0][i][5],WIFI[0][i][6]]);
             }
-            initMap();
+            initMap("csv");
             map.style.opacity="1";
             loadwififile.style.display="none";
             },1000)  
@@ -99,6 +99,7 @@ socket.on("wifi_database",(wifi,size,table,method,idapi)=>{
        loaddb.style.display="none";
       return  
    }
+   if(method=="api" && stockage_api.length==0){tourStops=[];boite_ext=[];boite_int=[];}
 
    wifisize=method=="api"?wifi[0].length:wifi.length;
    indexwifi=method=="api"?Math.round(size/100):Math.round(wifi.length/20);
@@ -120,17 +121,28 @@ socket.on("wifi_database",(wifi,size,table,method,idapi)=>{
      `;
       }else{
         if(boxnavapi.style.display=="none"){return}
+        let lat = wifi[0][i].trilat;
+        let long = wifi[0][i].trilong;
+        let ssid = wifi[0][i].ssid.toUpperCase();
+        let netid = wifi[0][i].netid.toUpperCase();
+        let channel = wifi[0][i].channel;
+        let security = wifi[0][i].encryption.toUpperCase();
+        let firsttime = wifi[0][i].firsttime.slice(0, -8);
+        let lasttime = wifi[0][i].lasttime.slice(0, -8);
+        let lastupdt = wifi[0][i].lastupdt.slice(0, -8);
+        let adress = `${wifi[0][i].country}, ${wifi[0][i].region},${wifi[0][i].city},${wifi[0][i].postalcode}  ${wifi[0][i].road}  ${wifi[0][i].housenumber}`;
+        tourStops.push([{ lat: +lat, lng: +long },ssid,netid,channel,security,firsttime,lasttime,lastupdt,adress]);
         boxwifidb.innerHTML+=`
         <tr class="box-wifi">
-        <td><p>${wifi[0][i].ssid}</p><br><img height="20" src="img/channel.png">${wifi[0][i].channel}</td>
-        <td><p>${wifi[0][i].netid.toUpperCase()}</p></td>
-        <td><p style="color:black;">${wifi[0][i].encryption}</p></td>
-        <td><p style="font-size:0.8em;" class="text-primary">${wifi[0][i].firsttime.slice(0, -8)}</p></td>
-        <td><p style="font-size:0.8em;" class="text-primary">${wifi[0][i].lasttime.slice(0, -8)}</p></td>
-        <td><p style="font-size:0.8em;" class="text-primary">${wifi[0][i].lastupdt.slice(0, -8)}</p></td>
+        <td><p>${ssid}</p><br><img height="20" src="img/channel.png">${channel}</td>
+        <td><p>${netid}</p></td>
+        <td><p style="color:black;">${security}</p></td>
+        <td><p style="font-size:0.8em;" class="text-primary">${firsttime}</p></td>
+        <td><p style="font-size:0.8em;" class="text-primary">${lasttime}</p></td>
+        <td><p style="font-size:0.8em;" class="text-primary">${lastupdt}</p></td>
          <td><img height="20" src="img/house.png">
-         ${wifi[0][i].country}, ${wifi[0][i].region},${wifi[0][i].city},${wifi[0][i].postalcode}  ${wifi[0][i].road}  ${wifi[0][i].housenumber}
-         <button name="${wifi[0][i].trilat}" value="${wifi[0][i].trilong}" class="goposition btn btn-success btn-sn"><img height="20" src="img/streetview.png"></button>
+         ${adress}
+         <button name="${lat}" value="${long}" class="goposition btn btn-success btn-sn"><img height="20" src="img/streetview.png"></button>
          </td>
         </td> 
         </tr>
@@ -147,6 +159,9 @@ socket.on("wifi_database",(wifi,size,table,method,idapi)=>{
       stockage_api.push(boxwifidb.innerHTML)
       btnlastlengthdb.name=idapi;
       loaddb.style.display="none";
+      setTimeout(()=>{
+      initMap("api");
+      },1000)
    }
 })
 
