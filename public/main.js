@@ -3,7 +3,7 @@ var boite_ext =[];
 var boite_int =[];
 var dateNow = new Date().toLocaleDateString('en-CA');
 var date_verif = "";
-
+var markerCluster;
 
 function initMap(View){ // display wifi file csv or wifi api 
 
@@ -38,7 +38,7 @@ function initMap(View){ // display wifi file csv or wifi api
 
    const infoWindow = new google.maps.InfoWindow();
 
-  var panorama = new google.maps.StreetViewPanorama(
+  const panorama = new google.maps.StreetViewPanorama(
     document.getElementById("streetview"),
     {
       //addressControl: false,
@@ -59,6 +59,7 @@ function initMap(View){ // display wifi file csv or wifi api
 
 
 function display_marker(){
+  if(View==""){View=boxnavapi.style.display=="none"?"csv":"api";}
  if(View=="csv"){
   tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], i) => {
       if(i==tourStops.length-1){ var last="Last WI-FI captued!";}
@@ -66,9 +67,9 @@ function display_marker(){
       var icon_marker=SECURITY=="NONE"?marker_wifi_open:marker_wifi_protected;
       if(SECURITY=="WEP"){icon_marker=marker_wifi_wep;}
       var icon_security=SECURITY=="NONE"?"open-wifi.png":"lock.png";
-          date_verif=date_verif==""?dateNow:date_verif;
+          date_verif=wifidate.value==""?dateNow:wifidate.value;
     if(Wifi_Security.includes(SECURITY)){
-       if("2022/06/20"<=date_verif.replace("-","/")){
+       if(DATE.split(" ")[0]<=date_verif){
         if(SECURITY=="NONE"){SECURITY="Open"}
       const markersignal_map = new google.maps.Marker({
       position,
@@ -104,7 +105,6 @@ function display_marker(){
     });
 
     boite_ext.push(markersignal_map);
-    Map.setStreetView(panorama);
 
    markersignal_map.addListener("click", (event) => {
        infoWindow.close();
@@ -161,7 +161,7 @@ tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], 
     });
        
     boite_int.push(markersignal_map);
-  Map.setStreetView(panorama);
+    //Map.setStreetView(panorama);
 
    markersignal_map.addListener("click", (event) => {
        infoWindow.close();
@@ -173,9 +173,6 @@ tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], 
     });
     }
   });
-
-  var markerCluster = new MarkerClusterer(Map, boite_ext,{maxZoom: 18,gridSize: 20,imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
-  //markerCluster.setMap(null);
 
 }else{
   tourStops.forEach(([position,SSID,MAC_ADRESS,CHANNEL,SECURITY,FIRSTTIME,LASTTIME,LASTUPDT,ADRESS], i) => {
@@ -222,7 +219,6 @@ tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], 
   });
 
   boite_ext.push(markersignal_map);
-  Map.setStreetView(panorama);
 
  markersignal_map.addListener("click", (event) => {
      infoWindow.close();
@@ -278,7 +274,7 @@ tourStops.forEach(([position,SSID,MAC_ADRESS,CHANNEL,SECURITY,FIRSTTIME,LASTTIME
   });
      
   boite_int.push(markersignal_map);
-Map.setStreetView(panorama);
+//Map.setStreetView(panorama);
 
  markersignal_map.addListener("click", (event) => {
      infoWindow.close();
@@ -291,192 +287,189 @@ Map.setStreetView(panorama);
   }
 });
 
-var markerCluster = new MarkerClusterer(Map, boite_ext,{maxZoom: 9,gridSize: 20,imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
-
-if(filterdbcountry.value==""){
-Map.setZoom(2);
-}else{
-Map.setZoom(6);
+ if(filterdbcountry.value==""){
+ Map.setZoom(2);
+ }else{
+ Map.setZoom(6);
+ }
 }
-}
+markerCluster = new MarkerClusterer(Map, boite_ext,{maxZoom: 18,gridSize: 20,imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 
 }
 display_marker();
+
+Btnviewallmarker.addEventListener("click",ViewAllMarkers);
+Btnhideallmarker.addEventListener("click",HideAllMarkers);
+
+ function ViewAllMarkers(){
+  for (let i in boite_ext) {
+    boite_ext[i].setMap(Map);
+  }
+  markerCluster.addMarkers(boite_ext);
+
+  for (let i = 0; i < boite_ext.length; i++) {
+    boite_ext[i].setMap(panorama);
+  }
+  Btnviewallmarker.style.display="none";
+  Btnhideallmarker.style.display="block";
+}
+function HideAllMarkers(){
+    for (let i in boite_ext){
+      boite_ext[i].setMap(null);
+    }
+    markerCluster.clearMarkers();
+    for (let i = 0; i < boite_int.length; i++) {
+      boite_int[i].setMap(null);
+    }
+  Btnviewallmarker.style.display="block";
+  Btnhideallmarker.style.display="none";
+}
+
+document.querySelectorAll(".view-security").forEach(box => {
+  box.addEventListener('click', (etat) => {
+      switch (box.textContent) {
+          case "WPA3":
+              if (etat.target.style.textDecoration !== "none") {
+                  Wifi_Security = Wifi_Security.filter((element) => element !== "WPA3");
+              } else {
+                  Wifi_Security.push("WPA3");
+              }
+              boite_ext=[];
+              HideAllMarkers();
+              display_marker();
+              break;
+          case "WPA2":
+              if (etat.target.style.textDecoration !== "none") {
+                  Wifi_Security = Wifi_Security.filter((element) => element !== "WPA2");
+              } else {
+                  Wifi_Security.push("WPA2");
+              }
+              boite_ext=[];
+              HideAllMarkers();
+              display_marker();
+              break;
+          case "WPA":
+              if (etat.target.style.textDecoration !== "none") {
+                  Wifi_Security = Wifi_Security.filter((element) => element !== "WPA");
+              } else {
+                  Wifi_Security.push("WPA");
+              }
+              boite_ext=[];
+              HideAllMarkers();
+              display_marker();
+              break;
+          case "WEP":
+              if (etat.target.style.textDecoration !== "none") {
+                  Wifi_Security = Wifi_Security.filter((element) => element !== "WEP");
+              } else {
+                  Wifi_Security.push("WEP");
+              }
+              boite_ext=[];
+              HideAllMarkers();
+              display_marker();
+              break;
+          case "OPEN":
+              if (etat.target.style.textDecoration !== "none") {
+                  Wifi_Security = Wifi_Security.filter((element) => element !== "NONE");
+              } else {
+                  Wifi_Security.push("NONE");
+              }
+              boite_ext=[];
+              HideAllMarkers();
+              display_marker();
+              break;
+      }
+  });
+});
 
 setTimeout(()=>{
 google.maps.event.trigger(Map, 'resize');
 },5000)
 
+wifidate.addEventListener('change',(etat)=>{
+  boite_ext=[];
+  HideAllMarkers();
+  display_marker();
+ })
 
-// let mapLoaded = false;
-// const markersPerPage = 2; // Nombre de markers à charger par page
-// let currentPage = 0; // Page de markers actuelle
+ //TODO REGLER PROBLEME DE NaN
+ btngoposition = document.querySelectorAll(".goposition");
+ btngoposition.forEach(markers=>{
+   markers.addEventListener("click", (e) => {
+     let lat = e.target.value;
+     let long = e.target.name;
 
-// // Événement pour détecter lorsque la carte est entièrement chargée
-// google.maps.event.addListenerOnce(Map, "idle", () => {
-//   mapLoaded = true;
-//   google.maps.event.trigger(Map, "bounds_changed"); // Déclencher manuellement l'événement bounds_changed une fois la carte chargée pour afficher les markers initiaux
-// });
+     infoWindow.close();
+     Map.setZoom(20);
+     map.style.border = "solid 1px lightgreen";
+     const newPosition = new google.maps.LatLng({ lat: +lat, lng: +long });
+     panorama.setPosition(newPosition);
+     Map.setCenter({ lat: +lat, lng: +long });
+     setTimeout(() => {
+       map.style.border = "solid 0px lightgreen";
+     }, 1000);
+   });
+   
+ })
 
-// // Événement pour le changement de région visible
-// google.maps.event.addListener(Map, "bounds_changed", () => {
-//   if (!mapLoaded) return; // Sortir de la fonction si la carte n'est pas encore complètement chargée
+ 
+Map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(locationBtn);
+locationBtn.addEventListener("click", () => {
+  // Try HTML5 geolocation.
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
 
-//   // Récupérez les limites de la région visible à l'écran
-//   const bounds = Map.getBounds();
-
-//   // Filtrer les markers en fonction des limites de la région visible
-//   const markersInVisibleRegion = boite_ext.filter((marker) => {
-//     return bounds.contains(marker.getPosition());
-//   });
-
-//   // Calculez la plage de markers à afficher pour la page actuelle
-//   const startIndex = currentPage * markersPerPage;
-//   const endIndex = (currentPage + 1) * markersPerPage;
-
-//   // Affichez les markers de la page actuelle sur la carte
-//   markersInVisibleRegion.slice(startIndex, endIndex).forEach((marker) => {
-//     marker.setVisible(true);
-//   });
-
-//   // Masquez les markers des pages précédentes
-//   markersInVisibleRegion.slice(0, startIndex).forEach((marker) => {
-//     marker.setVisible(false);
-//   });
-
-//   // Masquez les markers des pages suivantes
-//   markersInVisibleRegion.slice(endIndex).forEach((marker) => {
-//     marker.setVisible(false);
-//   });
-// });
-
-
-// google.maps.event.trigger(Map, "bounds_changed");
-
-
-
-document.querySelectorAll(".view-security").forEach(box => {
-  box.addEventListener('click',(etat)=>{
-       switch(box.textContent){
-          case "WPA3":
-            if(etat.target.style.textDecoration!=="none"){
-            Wifi_Security = Wifi_Security.filter((element) => element !== "WPA3");
-            }else{Wifi_Security.push("WPA3");}
-            setMapOnAll(null);
-            setPanoramaOnAll(null)
-            display_marker();
-          break;
-          case "WPA2":
-            if(etat.target.style.textDecoration!=="none"){
-            Wifi_Security = Wifi_Security.filter((element) => element !== "WPA2");
-            }else{Wifi_Security.push("WPA2");}
-            setMapOnAll(null);
-            setPanoramaOnAll(null)
-            display_marker();
-          break;
-          case "WPA":
-            if(etat.target.style.textDecoration!=="none"){
-            Wifi_Security = Wifi_Security.filter((element) => element !== "WPA");
-            }else{Wifi_Security.push("WPA");}
-            setMapOnAll(null);
-            setPanoramaOnAll(null)
-            display_marker();
-          break;
-          case "WEP":
-            if(etat.target.style.textDecoration!=="none"){
-            Wifi_Security = Wifi_Security.filter((element) => element !== "WEP");
-            }else{Wifi_Security.push("WEP");}
-            display_marker();
-          break;
-          case "OPEN":
-            if(etat.target.style.textDecoration!=="none"){
-            Wifi_Security = Wifi_Security.filter((element) => element !== "NONE");
-            }else{Wifi_Security.push("NONE");}
-            setMapOnAll(null);
-            setPanoramaOnAll(null)
-            display_marker();
-          break;
-
-       }
-  })
+        Map.setCenter(pos);
+        infoWindow.setPosition(pos);
+        infoWindow.setContent('<div class="bg-warning"><img height="40" src="img/position.png"></div>');
+        infoWindow.open(Map);
+        //panorama.setPosition(pos);
+        //Map.setStreetView(panorama);
+        Map.setZoom(19);
+       
+      },
+      () => {
+        handleLocationError(true, infoWindow, Map.getCenter());
+      }
+    );
+  } else {
+    // Browser doesn't support Geolocation
+    handleLocationError(false, infoWindow, Map.getCenter());
+  }
 });
+}
+
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+infoWindow.setPosition(pos);
+infoWindow.setContent(
+  browserHasGeolocation
+    ? "Error: The Geolocation service failed."
+    : "Error: Your browser doesn't support geolocation."
+);
+infoWindow.open(Map);
+
+}
 
 selectcsv.addEventListener('change',(etat)=>{
- if(etat.target.value!==tourStops[0][0].name_file){
-  loadwififile.style.display="block";
-  setMapOnAll(null);
-  setPanoramaOnAll(null)
-  tourStops=[];
-  wifi=[];
-  streetview.style.display="none";
-  map.style.height="80%";
-  etatsview.textContent="Active Street View";
-  map.style.border="solid 0px green";
-  boxwifidb.innerHTML="";
-  nb_capture.textContent="";
-  searchwifi.value="";
-  wifinbfound.textContent="";
-  socket.emit("change_csv",etat.target.value);
- }
-})
-wifidate.addEventListener('change',(etat)=>{
-    setMapOnAll(null);
-    setPanoramaOnAll(null)
-    date_verif=etat.target.value;
-    display_marker();
-    console.log(boite_ext)
-   })
-
-
-Btnviewallmarker.addEventListener("click",ViewAllMarkers);
-Btnhideallmarker.addEventListener("click",HideAllMarkers);
-
-function setMapOnAll(map) {
-  for (let i = 0; i < boite_ext.length; i++) {
-    boite_ext[i].setMap(map);
+  if(etat.target.value!==tourStops[0][0].name_file){
+   loadwififile.style.display="block";
+   wifi=[];
+   streetview.style.display="none";
+   map.style.height="80%";
+   etatsview.textContent="Active Street View";
+   map.style.border="solid 0px green";
+   boxwifidb.innerHTML="";
+   nb_capture.textContent="";
+   searchwifi.value="";
+   wifinbfound.textContent="";
+   socket.emit("change_csv",etat.target.value);
   }
-}
-function setPanoramaOnAll(map) {
-    for (let i = 0; i < boite_int.length; i++) {
-      boite_int[i].setMap(map);
-    }
-  }
-
-function ViewAllMarkers(){
-  setMapOnAll(Map);
-  setPanoramaOnAll(panorama)
-  Btnviewallmarker.style.display="none";
-  Btnhideallmarker.style.display="block";
-}
-function HideAllMarkers(){
-  setMapOnAll(null);
-  setPanoramaOnAll(null)
-  //markerCluster.setMap(null);
-  Btnviewallmarker.style.display="block";
-  Btnhideallmarker.style.display="none";
-}
-
-//TODO REGLER PROBLEME DE NaN
-  btngoposition = document.querySelectorAll(".goposition");
-  btngoposition.forEach(markers=>{
-    markers.addEventListener("click", (e) => {
-      let lat = +e.target.value;
-      let long = +e.target.name;
-
-      infoWindow.close();
-      Map.setZoom(30);
-      map.style.border = "solid 1px lightgreen";
-      const newPosition = new google.maps.LatLng({ lat: lat, lng: long });
-      panorama.setPosition(newPosition);
-      Map.setCenter({ lat: lat, lng: long });
-      setTimeout(() => {
-        map.style.border = "solid 0px lightgreen";
-      }, 1000);
-    });
-    
-  })
-
-}
+ })
 
 //Control street view panel
     function street_view(){

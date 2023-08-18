@@ -36,11 +36,11 @@ socket.on("csv",(WIFI,API)=>{
     tourStops = [];
     boite_ext=[];
     boite_int=[];
-    nb_wpa3.textContent="";
-    nb_wpa2.textContent="";
-    nb_wpa.textContent="";
-    nb_wep.textContent="";
-    nb_open.textContent="";
+    nb_wpa3.textContent=0;
+    nb_wpa2.textContent=0;
+    nb_wpa.textContent=0;
+    nb_wep.textContent=0;
+    nb_open.textContent=0;
     nb_wpa3.textContent=WIFI[1][0];
     nb_wpa2.textContent=WIFI[1][1];
     nb_wpa.textContent=WIFI[1][2];
@@ -71,8 +71,8 @@ socket.on("csv",(WIFI,API)=>{
             }
             initMap("csv");
             map.style.opacity="1";
-            loadwififile.style.display="none";
             },10)  
+            loadwififile.style.display="none";
 })
 
 
