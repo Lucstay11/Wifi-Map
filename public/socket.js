@@ -72,7 +72,7 @@ socket.on("csv",(WIFI,API)=>{
             initMap("csv");
             map.style.opacity="1";
             loadwififile.style.display="none";
-            },1000)  
+            },10)  
 })
 
 
@@ -93,7 +93,7 @@ searchwifi.addEventListener("input",(e)=>{
    btnlastlengthdb.style.display="none"; 
 })
 
-socket.on("wifi_database",(wifi,size,table,method,idapi)=>{
+socket.on("wifi_database",(wifi,size,table,method,idapi,totalsecapi)=>{
    if(method=="api" && idapi=="error"){
        infoapi.textContent="Api error: too many queries today!";
        loaddb.style.display="none";
@@ -127,6 +127,7 @@ socket.on("wifi_database",(wifi,size,table,method,idapi)=>{
         let netid = wifi[0][i].netid.toUpperCase();
         let channel = wifi[0][i].channel;
         let security = wifi[0][i].encryption.toUpperCase();
+        security = security=="None"?"NONE":security;
         let firsttime = wifi[0][i].firsttime.slice(0, -8);
         let lasttime = wifi[0][i].lasttime.slice(0, -8);
         let lastupdt = wifi[0][i].lastupdt.slice(0, -8);
@@ -142,7 +143,7 @@ socket.on("wifi_database",(wifi,size,table,method,idapi)=>{
         <td><p style="font-size:0.8em;" class="text-primary">${lastupdt}</p></td>
          <td><img height="20" src="img/house.png">
          ${adress}
-         <button name="${lat}" value="${long}" class="goposition btn btn-success btn-sn"><img height="20" src="img/streetview.png"></button>
+         <button name="${long}" value="${lat}" class="goposition btn btn-success btn-sn"><img height="20" src="img/streetview.png"></button>
          </td>
         </td> 
         </tr>
@@ -159,14 +160,24 @@ socket.on("wifi_database",(wifi,size,table,method,idapi)=>{
       stockage_api.push(boxwifidb.innerHTML)
       btnlastlengthdb.name=idapi;
       loaddb.style.display="none";
+      nb_wpa3.textContent=+nb_wpa3.textContent+totalsecapi[0];
+      nb_wpa2.textContent=+nb_wpa2.textContent+totalsecapi[1];
+      nb_wpa.textContent=+nb_wpa.textContent+totalsecapi[2];
+      nb_wep.textContent=+nb_wep.textContent+totalsecapi[3];
+      nb_open.textContent=+nb_open.textContent+totalsecapi[4];
       setTimeout(()=>{
       initMap("api");
-      },1000)
+      },10)
    }
 })
 
 function searchapi(){
    stockage_api=[];
+   nb_wpa3.textContent=0;
+   nb_wpa2.textContent=0;
+   nb_wpa.textContent=0;
+   nb_wep.textContent=0;
+   nb_open.textContent=0;
    var filtername = filterdbname.value;
    var filtersecurity = filterdbsecurity.value;
    var filterwps = filterdbwps.value
@@ -217,6 +228,11 @@ function show_page_db(action){
 
 function change_status_db(){
     if(boxnavapi.style.display=="none"){
+      nb_wpa3.textContent=0;
+      nb_wpa2.textContent=0;
+      nb_wpa.textContent=0;
+      nb_wep.textContent=0;
+      nb_open.textContent=0;
       wifinbfound.textContent="";
       searchwifi.value="";
       action_query="api";
@@ -252,6 +268,7 @@ function change_status_db(){
       btnlastlengthdb.style.display="none";
       infoapi.textContent="";
       loaddb.style.display="none";  
+      socket.emit("change_csv",selectcsv.value);
     }
     boxwifidb.innerHTML="";
 }

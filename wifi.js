@@ -156,10 +156,35 @@ function display_wifi(action, name,socket,method) {
               io.to(socket.id).emit("wifi_database",result,totalfind,actiontable,"api","error")
                 return;
              }
+             let WPA3 = 0;
+             let WPA2 = 0;
+             let WPA = 0;
+             let WEP = 0;
+             let OPEN = 0;
+             for(i=0;i<=data.results.length-1;i++){
+             switch (data.results[i].encryption){
+              case 'wpa3':
+                WPA3++;
+                break;
+              case 'wpa2':
+                WPA2++;
+                break;
+              case 'wpa':
+                WPA++;
+                break;
+              case 'wep':
+                WEP++;
+                break;
+              case 'none':
+                OPEN++;
+                break;
+            }
+           }
+           const TotalSecurity = [WPA3, WPA2, WPA, WEP, OPEN];
            idnextpage=data.searchAfter;
            totalfind=data.totalResults
            result.push(data.results)
-           io.to(socket.id).emit("wifi_database",result,totalfind,actiontable,"api",idnextpage)
+           io.to(socket.id).emit("wifi_database",result,totalfind,actiontable,"api",idnextpage,TotalSecurity)
       })
       }
 
