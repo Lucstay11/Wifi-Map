@@ -174,9 +174,8 @@ tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], 
     }
   });
 
-  var markerCluster = new MarkerClusterer(Map, boite_ext,{gridSize: 20,imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+  var markerCluster = new MarkerClusterer(Map, boite_ext,{maxZoom: 18,gridSize: 20,imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
   //markerCluster.setMap(null);
-  const minZoomToShowMarkers = 20;
 
 }else{
   tourStops.forEach(([position,SSID,MAC_ADRESS,CHANNEL,SECURITY,FIRSTTIME,LASTTIME,LASTUPDT,ADRESS], i) => {
