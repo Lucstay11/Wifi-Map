@@ -413,45 +413,37 @@ wifidate.addEventListener('change',(etat)=>{
  })
 
  
-Map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(locationBtn);
-locationBtn.addEventListener("click", () => {
-  // Try HTML5 geolocation.
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const pos = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-
-        Map.setCenter(pos);
-        infoWindow.setPosition(pos);
-        infoWindow.setContent('<div class="bg-warning"><img height="40" src="img/position.png"></div>');
-        infoWindow.open(Map);
-        //panorama.setPosition(pos);
-        //Map.setStreetView(panorama);
-        Map.setZoom(19);
-       
-      },
-      () => {
-        handleLocationError(true, infoWindow, Map.getCenter());
-      }
-    );
-  } else {
-    // Browser doesn't support Geolocation
-    handleLocationError(false, infoWindow, Map.getCenter());
-  }
-});
-}
-
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-infoWindow.setPosition(pos);
-infoWindow.setContent(
-  browserHasGeolocation
-    ? "Error: The Geolocation service failed."
-    : "Error: Your browser doesn't support geolocation."
-);
-infoWindow.open(Map);
+ Map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(locationBtn);
+ locationBtn.addEventListener("click", () => {
+   // Try HTML5 geolocation.
+   if (navigator.geolocation) {
+     navigator.geolocation.getCurrentPosition(
+       (position) => {
+         const pos = {
+           lat: position.coords.latitude,
+           lng: position.coords.longitude,
+         };
+ 
+         Map.setCenter(pos);
+         infoWindow.setPosition(pos);
+         infoWindow.setContent('<div class="bg-warning"><img height="40" src="img/position.png"></div>');
+         infoWindow.open(Map);
+         
+         panorama.setPosition(pos);
+         Map.setStreetView(panorama);
+ 
+         Map.setZoom(19);
+       },
+       () => {
+         handleLocationError(true, infoWindow, Map.getCenter());
+       }
+     );
+   } else {
+     // Browser doesn't support Geolocation
+     handleLocationError(false, infoWindow, Map.getCenter());
+   }
+ });
+ 
 
 }
 
