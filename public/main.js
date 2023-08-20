@@ -110,6 +110,7 @@ function display_marker(){
        infoWindow.close();
        Map.setZoom(20);
        Map.setCenter(markersignal_map.getPosition());
+       panorama.setPosition(markersignal_map.getPosition());
       infoWindow.setContent(markersignal_map.getTitle());
       infoWindow.open(markersignal_map.getMap(), markersignal_map);
     });
@@ -161,7 +162,7 @@ tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], 
     });
        
     boite_int.push(markersignal_map);
-    //Map.setStreetView(panorama);
+    Map.setStreetView(panorama);
 
    markersignal_map.addListener("click", (event) => {
        infoWindow.close();
@@ -224,6 +225,7 @@ tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], 
      infoWindow.close();
      Map.setZoom(20);
      Map.setCenter(markersignal_map.getPosition());
+     panorama.setPosition(markersignal_map.getPosition());
     infoWindow.setContent(markersignal_map.getTitle());
     infoWindow.open(markersignal_map.getMap(), markersignal_map);
   });
@@ -274,7 +276,7 @@ tourStops.forEach(([position,SSID,MAC_ADRESS,CHANNEL,SECURITY,FIRSTTIME,LASTTIME
   });
      
   boite_int.push(markersignal_map);
-//Map.setStreetView(panorama);
+  Map.setStreetView(panorama);
 
  markersignal_map.addListener("click", (event) => {
      infoWindow.close();
@@ -412,9 +414,15 @@ wifidate.addEventListener('change',(etat)=>{
    
  })
 
- 
- Map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(locationBtn);
- locationBtn.addEventListener("click", () => {
+
+ locationBtn = document.createElement('button');
+ locationBtn.style.boxShadow="box-shadow: 0px 0px 8px black;";
+ locationBtn.className="btn btn-warning btn-icon-split btn-sm";
+ locationBtn.innerHTML = `<span class="icon text-white-50"><img src="img/position.png" height="20"></span>`;
+
+  Map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(locationBtn);
+
+   locationBtn.addEventListener("click", () => {
    // Try HTML5 geolocation.
    if (navigator.geolocation) {
      navigator.geolocation.getCurrentPosition(
@@ -423,16 +431,13 @@ wifidate.addEventListener('change',(etat)=>{
            lat: position.coords.latitude,
            lng: position.coords.longitude,
          };
- 
+         infoWindow.close();
+         Map.setZoom(19);
          Map.setCenter(pos);
+         panorama.setPosition(pos);
          infoWindow.setPosition(pos);
          infoWindow.setContent('<div class="bg-warning"><img height="40" src="img/position.png"></div>');
          infoWindow.open(Map);
-         
-         panorama.setPosition(pos);
-         Map.setStreetView(panorama);
- 
-         Map.setZoom(19);
        },
        () => {
          handleLocationError(true, infoWindow, Map.getCenter());
@@ -443,7 +448,6 @@ wifidate.addEventListener('change',(etat)=>{
      handleLocationError(false, infoWindow, Map.getCenter());
    }
  });
- 
 
 }
 

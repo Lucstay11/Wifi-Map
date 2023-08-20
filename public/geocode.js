@@ -1,4 +1,3 @@
-
 fetch("https://api.wigle.net//api/v2/stats/site")
 .then(r=>r.json())
 .then(data=> nb_total_wifi_api.textContent= data.nettotal.toLocaleString())

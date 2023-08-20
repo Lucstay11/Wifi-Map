@@ -18,7 +18,7 @@
 </p>
 <h2 align="center">Observe your wifi capture with Wigle on a Google map and personalized streetview</h2>
 <p align="center">
-  <img height="600" src="src/demo1.jpg">
+  <img height="600" src="public/src/demo.png">
 </p>
 
 **`First install nodejs and npm`**
@@ -38,6 +38,12 @@ $ npm i csv csv-parser express express-fileupload path socket.io
 $ node app.js
 ```
 
+<i align="center">Explore <b>WiFi</b> around the world in real time</i>
+
+<p align="center">
+  <img height="600" src="public/src/demo2.png">
+   <img height="600" src="public/src/demo3.png">
+</p>
 
 <i align="center">Export your database in CSV format on the Wigle application and then import it on the  <b>wifi map</b>!</i>
 
