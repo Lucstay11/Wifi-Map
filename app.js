@@ -10,7 +10,6 @@ const path = require("path");
 const WifiFiles = path.join(__dirname,"wifi");
 const { display_wifi } = require('./wifi');
 const { convert_Wiggle } = require('./convert-wiggle');
-var WifiFile=""; // Enter a file if you prefer to manually display this database at startup -> exemple.csv
 
 app.use(upload());
 app.use(express.static('public'));
@@ -39,13 +38,8 @@ socket.on("search_db",(wifi)=>{
   display_wifi("query",wifi,socket,wifi[8].action)
 })
 
-//Verify is database exist and display at the client web
- fs.readdir(WifiFiles, (err, files) => {
-  WifiFile=files[0]
-  if(files.length>0){
-   display_wifi("file",WifiFile,socket)
-  } 
- })
+//Display the api wifi at the startup on the client web
+ display_wifi("query","adv",socket,"startup")
    
    socket.on("disconnect",()=>{
     io.to(socket.id).emit("nb_live",socket.server.engine.clientsCount);

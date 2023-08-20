@@ -1,7 +1,16 @@
+function display_stats_api(){
 fetch("https://api.wigle.net//api/v2/stats/site")
 .then(r=>r.json())
-.then(data=> nb_total_wifi_api.textContent= data.nettotal.toLocaleString())
-
+.then(data=> {
+nb_total_wifi_api.textContent= data.nettotal.toLocaleString()
+nb_wpa3.textContent=data.netwpa3.toLocaleString()
+nb_wpa2.textContent=data.netwpa2.toLocaleString()
+nb_wpa.textContent=data.netwpa.toLocaleString()
+nb_wep.textContent=data.netwep.toLocaleString()
+nb_open.textContent=data.netnowep.toLocaleString()
+})
+}
+display_stats_api()
 
 function displayboxregion(country, index, size) {
     let timeoutId;

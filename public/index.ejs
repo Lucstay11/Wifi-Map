@@ -58,8 +58,7 @@ box-shadow:0px 0px 4px black;
 <div id="test"></div>
      <div id="map" style="transition:all 2s;height:80%;opacity:0.1;"></div>
      <div id="streetview" style="display:none;transition: border 1s;height:60%;"></div>
-     
-     <!-- <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script> -->
+
      <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeTlM2-93T2TwzAVf-tpTAoCxlfHGSnqc&v=weekly" defer></script>
      <script src="/socket.io/socket.io.js"></script>
@@ -69,11 +68,11 @@ box-shadow:0px 0px 4px black;
 
      <div class="bg-gradient-primary text-dark">
        <div style="display:flex;justify-content:space-between;" class="bg-gradient-dark text-white">
-         <p style="border-right:solid 1px grey;">WPA3<br><span class="text-primary" id="nb_wpa3"></span></p>
-         <p style="border-right:solid 1px grey;">WPA2<br><span class="text-primary" id="nb_wpa2"></span></p>
-         <p style="border-right:solid 1px grey;">WPA<br><span class="text-primary" id="nb_wpa"></span></p>
-         <p style="border-right:solid 1px grey;">WEP<br><span class="text-primary" id="nb_wep"></span></p>
-         <p style="border-right:solid 1px grey;">OPEN<br><span class="text-primary" id="nb_open"></span></p>
+         <p style="border-right:solid 1px grey;">WPA3<br><span class="text-primary" id="nb_wpa3" style="font-size: 0.8em;"></span></p>
+         <p style="border-right:solid 1px grey;">WPA2<br><span class="text-primary" id="nb_wpa2" style="font-size: 0.8em;"></span></p>
+         <p style="border-right:solid 1px grey;">WPA<br><span class="text-primary" id="nb_wpa" style="font-size: 0.8em;"></span></p>
+         <p style="border-right:solid 1px grey;">WEP<br><span class="text-primary" id="nb_wep" style="font-size: 0.8em;"></span></p>
+         <p style="border-right:solid 1px grey;">OPEN<br><span class="text-primary" id="nb_open" style="font-size: 0.8em;"></span></p>
        </div>
          <div id="setwifi" style="display:none;" class="text-center">
               <div class="card" style="width: 100%;transition:all 2s;">
@@ -104,8 +103,8 @@ box-shadow:0px 0px 4px black;
                        </button>
                   </div>
      </div>
-    <div id="contboxstatus" style="display: flex;justify-content: space-between;align-items: center;box-shadow: 0px 0px 8px black;" class="bg-gradient-primary text-dark" >
-     <div id="boxnavcsv" style="flex: 1;">
+    <div id="contboxstatus" style="display: flex;justify-content: space-between;align-items: center;box-shadow: 0px 0px 8px black;" class="bg-gradient-success text-dark" >
+     <div id="boxnavcsv" style="display:none;flex: 1;">
      <p class="text-center text-white"><img src="img/database.png" height="40">Your Wifi Database</p>
        <div style="display: flex;">
         <select id="selectcsv" onclick="btndwn.href=`/${this.value}`" class="listfilewifi btn btn-primary btn-icon-split btn-sm" style="display: block;margin:0 auto;box-shadow:0px 0px 4px black;">
@@ -113,21 +112,21 @@ box-shadow:0px 0px 4px black;
           <img id="loadwififile" height="20" style="display:none;" src="img/loading.gif">
        </div>
       </div>
-      <div id="boxnavapi" style="display: none;flex: 1;">
+      <div id="boxnavapi" style="flex: 1;">
         <p class="text-center text-white"><img src="img/world.png" height="40">World Wifi Database</p>
       </div>
 
-      <div id="statusboxnav" class="bg-gradient-success text-dark" style="padding: 20px;" onclick="change_status_db()">
-        <img src="img/world.png" height="50">
+      <div id="statusboxnav" class="bg-gradient-primary text-dark" style="padding: 20px;">
+        <img src="img/database.png" height="50">
       </div>
     </div>
          <div class="card shadow mb-4" id="card-database">
-                        <div id="boxheadcsv" style="display:block;text-align: center;" class="card-header py-3">
+                        <div id="boxheadcsv" style="display: none;text-align: center;" class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary" style="margin-left:100px;"><span id="nb_capture"></span> Captures</h6>
                             <p class="m-0 font-weight-bold text-warning" style="font-size: 0.8em;">Last capture on</p><span id="nb_last_capture" style="font-size: 0.8em;"></span>
                         </div>
 
-                        <div id="boxheadapi" style="display: none;">
+                        <div id="boxheadapi">
                         <div style="display:block;text-align: center;" class="card-header py-3">
                           <h6>The world's largest wifi database</h6>
                           <h8 class="m-0 font-weight-bold text-secondary" style="margin-left:100px;"><img src="img/wifi-gauge.png" height="30"><span id="nb_total_wifi_api"></span> Captures</h8>
@@ -151,7 +150,7 @@ box-shadow:0px 0px 4px black;
                              <div style="display:flex;margin-bottom: 20px;align-items: center;">
                               <p id="wifinbfound"></p>
                              <input id="searchwifi" type="text" class="text-primary d-block m-auto border border-primary" style="flex: 1;">
-                             <button id="btnsearchdb" style="display: none;" class="btn btn-primary btn-icon-split btn-sm" onclick="searchapi()"><img height="25" src="img/search.png"></button>
+                             <button id="btnsearchdb" class="btn btn-primary btn-icon-split btn-sm" onclick="searchapi(searchwifi.value)"><img height="25" src="img/search.png"></button>
                               </div>
                             <div style="display: flex;">
                               <p class="text-center">Search</p>
@@ -175,7 +174,7 @@ box-shadow:0px 0px 4px black;
                             </select>
                             </div>
 
-                            <div id="boxfilterlocation" style="display: none;">
+                            <div id="boxfilterlocation">
                               <div style="display: flex;">
                               <p class="text-center" style="margin-left: 10px;margin-right: 10px;">Country</p>
                               <select id="filterdbcountry" class="btn btn-primary btn-icon-split btn-sm" style="height:20px;box-shadow:0px 0px 4px black;">
@@ -196,7 +195,7 @@ box-shadow:0px 0px 4px black;
                             
                             <div class="table-responsive text-primary" style="height: 600px;">
                                 <table class="table table-bordered" id="data" width="100%" cellspacing="0">
-                                    <thead id="infotablecsv">
+                                    <thead id="infotablecsv" style="display: none;">
                                         <tr>
                                             <th>SSID & Channel</th>
                                             <th>Mac adress</th>
@@ -207,7 +206,7 @@ box-shadow:0px 0px 4px black;
                                             <th>Location</th>
                                         </tr>
                                     </thead>
-                                    <thead id="infotableapi" style="display: none;">
+                                    <thead id="infotableapi">
                                         <tr>
                                           <th>SSID & Channel</th>
                                           <th>Mac adress</th>
@@ -229,7 +228,7 @@ box-shadow:0px 0px 4px black;
                                <a id="btnnextdb" onclick="show_page_db('next')" class="btn btn-white btn-icon-split btn-lg" style="min-width: 30px;border-radius: 300px;"><img style="height: 30px;" src="img/next.png"></a>
                               <a id="btnlastlengthdb" class="btn btn-primary btn-icon-split btn-lg" style="min-width: 30px;border-radius: 300px;">0</a>
                              </div>
-
+<section id="boxoptiondb" style="display: none;">
  <div style="display:flex;">
  <img height="30" style="display:block;margin:0 auto;float:right;" src="img/add.png" onclick="uploadcsv.style.display='none';deletecsv.style.display='none';downloaddb.style.display='none';uploadcsv.style.display=uploadcsv.style.display=='block'?'none':'block'">
  <img height="30" style="display:block;margin:0 auto;float:left;" src="img/download.png" onclick="uploadcsv.style.display='none';deletecsv.style.display='none';downloaddb.style.display='none';downloaddb.style.display=downloaddb.style.display=='block'?'none':'block'">
@@ -283,6 +282,40 @@ box-shadow:0px 0px 4px black;
                     </div>
                 </div>
             </div>
+</section>
+<div id="boxabout" style="text-align: center;">
+    <div class="card">
+      <div class="card-header bg-gradient-primary text-white" id="headingOne">
+        <h5 class="mb-0">
+          <button class="btn text-white" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+             About
+          </button>
+        </h5>
+      </div>
+  
+      <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#boxabout">
+        <div class="card-body">
+          <img height="30" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png">See the source code of the project <a href="https://github.com/Lucstay11/Wifi-Map">Here</a>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header bg-gradient-primary text-white" id="headingTwo">
+        <h5 class="mb-0">
+          <button class="btn text-white" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+           License
+          </button>
+        </h5>
+      </div>
+      <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#boxabout">
+        <div class="card-body">
+          <span class="text-primary">Wifi Map</span> is an Open source project created by myself but which is contributed by the community and their wifi network capture around the world. The database used belongs exclusively to <em>Wigle.net</em>
+        </div>
+      </div>
+    </div>
+</div>
+
+
       <footer>
          <div class="bg-gradient-primary" style="display:flex;box-shadow:0px 0px 4px black;">
          <p style="border:solid 1px lightgreen;color:lightgreen;background-color:lightgreen;border-radius:50%;width:10px;height:10px;"></p><img height="20" src="img/person.png" ><p style="font-weight:900;color:white;" id="nb_live"></p>
@@ -290,8 +323,8 @@ box-shadow:0px 0px 4px black;
        </footer>
 
        <script src="src/jquery.dataTables.min.js"></script>
-       <script src="socket.js"></script>
        <script src="geocode.js"></script>
+       <script src="socket.js"></script>
        <script src="main.js"></script>
        <script src="src/style-map.js"></script>
 </html>

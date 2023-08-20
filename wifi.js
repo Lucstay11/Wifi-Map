@@ -103,6 +103,7 @@ function display_wifi(action, name,socket,method) {
     else if(action=="query"){
       var result = [];
       var totalfind = null;
+      if(method=="api"||method=="csv"){
       var filtersecurity = name[2]
       var filterwps = name[3]
       var filtercountry = name[4]
@@ -113,8 +114,9 @@ function display_wifi(action, name,socket,method) {
       var lastwifi = name[8].actiontable=="plus"?name[8].indextable*20+20:name[8].indextable*20;
       var actiontable = name[8].viewtable=="all"?"all":"table";
       firstwifi=firstwifi==10?1:firstwifi;
+      }
 
-       if(method!="api"){
+       if(method=="csv"){
 
       for(i=1;i<WIFI.length;i++){
         filter=name[1]=="SSID"?WIFI[i][0]:WIFI[i][1];
@@ -140,8 +142,16 @@ function display_wifi(action, name,socket,method) {
         }
        }
       }else{
+        var idnextpage;
+        var url = "https://api.wigle.net/api/v2/network/search?ssid=homespot";
+        actiontable="allstartup";
+        if(method=="api"){
+        var actiontable = name[8].viewtable=="all"?"all":"table";
         if(name[8].actiontable=="plus"){var idnextpage=`&searchAfter=${name[8].idnextpage}`}else{idnextpage=""}
-        const url = `https://api.wigle.net/api/v2/network/search?country=${filtercountry}&postalCode=${filterpostal}&ssid=${name[0]}&encryption=${filtersecurity}&road=${filterstreet}&houseNumber=${filterstreetnb}${idnextpage}`;
+        const research = name[1]=="SSID"?`&ssid=${name[0]}`:`&netid=${name[0]}`;
+        var url = `https://api.wigle.net/api/v2/network/search?country=${filtercountry}&postalCode=${filterpostal}&${research}&encryption=${filtersecurity}&road=${filterstreet}&houseNumber=${filterstreetnb}${idnextpage}`;
+        }
+
         const username = 'AID29fc21c646b4104e1cada5b468dc0aeb';
         const password = '5d9590ecc1c1cbdc5d4447670f4b64fe';
         const headers = {
@@ -153,7 +163,7 @@ function display_wifi(action, name,socket,method) {
       .then(response => response.json())
       .then(data => {
             if(data.success==false){
-              io.to(socket.id).emit("wifi_database",result,totalfind,actiontable,"api","error")
+             io.to(socket.id).emit("wifi_database",result,totalfind,actiontable,"api","error")
                 return;
              }
              let WPA3 = 0;

@@ -5,7 +5,7 @@ var WPA2=0;
 var WPA=0;
 var WEP=0;
 var OPEN=0;
-var action_query="csv";
+var action_query="api";
 var stockage_api=[];
 
 
@@ -31,8 +31,7 @@ socket.on("list_wifi_file",(file)=>{
    }
    })
 
-socket.on("csv",(WIFI,API)=>{
-    nb_total_wifi_api.textContent=API
+socket.on("csv",(WIFI)=>{
     tourStops = [];
     boite_ext=[];
     boite_int=[];
@@ -90,6 +89,10 @@ searchwifi.addEventListener("input",(e)=>{
    socket.emit("search_db",[wifi,filtername,filtersecurity,filterwps,filtercountry,filterpostal,filterstreet,filterstreetnb,{viewtable:"all",indextable: btnfirstlengthdb.textContent,actiontable: "",action:"csv"}]);
    wifinbfound.textContent="0 found"
    }
+   if(action_query=="api"&&wifi==""){
+     wifinbfound.textContent="0 found"
+     display_stats_api();
+   }
    btnlastlengthdb.style.display="none"; 
 })
 
@@ -133,6 +136,7 @@ socket.on("wifi_database",(wifi,size,table,method,idapi,totalsecapi)=>{
         let lastupdt = wifi[0][i].lastupdt.slice(0, -8);
         let adress = `${wifi[0][i].country}, ${wifi[0][i].region},${wifi[0][i].city},${wifi[0][i].postalcode}  ${wifi[0][i].road}  ${wifi[0][i].housenumber}`;
         tourStops.push([{ lat: +lat, lng: +long },ssid,netid,channel,security,firsttime,lasttime,lastupdt,adress]);
+        if(table!="allstartup"){
         boxwifidb.innerHTML+=`
         <tr class="box-wifi">
         <td><p>${ssid}</p><br><img height="20" src="img/channel.png">${channel}</td>
@@ -148,10 +152,12 @@ socket.on("wifi_database",(wifi,size,table,method,idapi,totalsecapi)=>{
         </td> 
         </tr>
        `;
+        }
       }
    }
 
-   if(table!="table"){
+   btnlastlengthdb.style.display="none";
+   if(table!="table"&&table!="allstartup"){
    wifinbfound.textContent=`${size} founds`;
    btnlastlengthdb.textContent=indexwifi;
    if(wifi.length>20||wifi[0].length>20){btnlastlengthdb.textContent++;btnlastlengthdb.style.display="block";}
@@ -160,18 +166,21 @@ socket.on("wifi_database",(wifi,size,table,method,idapi,totalsecapi)=>{
       stockage_api.push(boxwifidb.innerHTML)
       btnlastlengthdb.name=idapi;
       loaddb.style.display="none";
+      if(table=="all"){
       nb_wpa3.textContent=+nb_wpa3.textContent+totalsecapi[0];
       nb_wpa2.textContent=+nb_wpa2.textContent+totalsecapi[1];
       nb_wpa.textContent=+nb_wpa.textContent+totalsecapi[2];
       nb_wep.textContent=+nb_wep.textContent+totalsecapi[3];
       nb_open.textContent=+nb_open.textContent+totalsecapi[4];
+      }
       setTimeout(()=>{
       initMap("api");
+      map.style.opacity="1";
       },10)
    }
 })
 
-function searchapi(){
+function searchapi(search){
    stockage_api=[];
    nb_wpa3.textContent=0;
    nb_wpa2.textContent=0;
@@ -187,7 +196,7 @@ function searchapi(){
    var filterstreetnb = filterdbstreetnumber.value
    if(searchwifi.value==""){return}
    loaddb.style.display="block";
-   socket.emit("search_db",[searchwifi.value,filtername,filtersecurity,filterwps,filtercountry,filterpostal,filterstreet,filterstreetnb,{viewtable:"all",indextable: btnfirstlengthdb.textContent,actiontable: "",action:"api"}]);
+   socket.emit("search_db",[search,filtername,filtersecurity,filterwps,filtercountry,filterpostal,filterstreet,filterstreetnb,{viewtable:"all",indextable: btnfirstlengthdb.textContent,actiontable: "",action:"api"}]);
 
 }
 
@@ -248,7 +257,7 @@ function change_status_db(){
       btnsearchdb.style.display="block";
       infotablecsv.style.display="none";
       infotableapi.style.display="block";
-      displayboxcountry()
+      display_stats_api();
     }else{
       wifinbfound.textContent="";
       searchwifi.value="";
@@ -272,3 +281,7 @@ function change_status_db(){
     }
     boxwifidb.innerHTML="";
 }
+
+setTimeout(()=>{
+   displayboxcountry();
+},3000)

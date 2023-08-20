@@ -212,7 +212,6 @@ tourStops.forEach(([position,SSID,MAC_ADRESS,SIGNAL,CHANNEL,SECURITY,WPS,DATE], 
     </div>
     `,
      label: {
-      text: `${SSID}`,
       color: 'white',
       fontSize: "10px"
      },
