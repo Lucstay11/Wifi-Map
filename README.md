@@ -24,7 +24,7 @@
 $ git clone https://github.com/Lucstay11/Wifi-Map;cd Wifi-Map
 ```
 ```
-$ npm i csv csv-parser express express-fileupload path socket.io
+$ npm install
 ```
 
 
