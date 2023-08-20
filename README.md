@@ -1,10 +1,7 @@
 <p align="center">
 <a href="https://github.com/Ignitetch/AdvPhishing/releases"><img title="GitHub version" src="https://img.shields.io/badge/version-1-blue" ></a>  
 </p>
-<p align="center">
-  <img src="src/logo-gpt-bash.jpg">
-</p>
-<h1 align="center">Wifi-Map</h1>
+<h1 align="center">Wifi-Map 🌍</h1>
 <p align="center">
   <img src="https://img.shields.io/badge/📶-Network-blue?style=for-the-badge">
   <img src="https://img.shields.io/badge/🔎-Osint-lightgreen?style=for-the-badge">
@@ -41,8 +38,8 @@ $ node app.js
 <i align="center">Explore <b>WiFi</b> around the world in real time</i>
 
 <p align="center">
-  <img height="600" src="public/img/demo2.png">
-   <img height="600" src="public/img/demo3.png">
+  <img height="600" src="public/img/demo2.jpg">
+   <img height="600" src="public/img/demo3.jpg">
 </p>
 
 <i align="center">Export your database in CSV format on the Wigle application and then import it on the  <b>wifi map</b>!</i>
