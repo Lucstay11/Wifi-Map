@@ -15,6 +15,11 @@ function displayAllWifi() {
     let lastdatecapture = "";
 
     fs.readdir(folderPath, (err, files) => {
+    if (files.length === 0){
+      console.log("No wifi database capturing!".bgRed)  
+      return
+    }
+
     files.forEach((file) => {
     fs.createReadStream(folderPath + file)
       .pipe(parse({ delimiter: ',', from_line: 2 }))

@@ -25,7 +25,7 @@ socket.on("list_wifi_file",(file)=>{
     }
    }else{
       list.forEach(liste => {
-         liste.innerHTML+=`<option>No database saved</option>`;
+         liste.innerHTML+=`<option value="">No database saved</option>`;
          btndwn.style.display="none";
        });
    }
@@ -276,8 +276,10 @@ function change_status_db(){
       infotableapi.style.display="none";
       btnlastlengthdb.style.display="none";
       infoapi.textContent="";
-      loaddb.style.display="none";  
+      loaddb.style.display="none";
+      if(selectcsv.value!=""){  
       socket.emit("change_csv",selectcsv.value);
+      }
     }
     boxwifidb.innerHTML="";
 }
