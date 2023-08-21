@@ -16,6 +16,7 @@ function displayAllWifi() {
 
     fs.readdir(folderPath, (err, files) => {
     if (files.length === 0){
+      console.log(files.length)
       console.log("No wifi database capturing!".bgRed)  
       return
     }

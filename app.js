@@ -90,4 +90,4 @@ server.listen(PORT,()=>{
 console.log("server start: "+PORT);
 });
 
-display_wifi("all");
+//display_wifi("all");
