@@ -49,6 +49,8 @@ $ node app.js
    <img height="600" src="public/img/upload.jpg">
 </p>
 
+<h3 align="center">Test demo <a href="https://wifimap.onrender.com/">here</a></h3>
+
 ### Find Me on :
 <p align="left">
   <a href="https://github.com/Lucstay11" target="_blank"><img src="https://img.shields.io/badge/Github-Lucstay11-green?style=for-the-badge&logo=github"></a>
