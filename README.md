@@ -50,7 +50,7 @@ $ node app.js
 </p>
 
 <i align="center">
-  If people want me to deploy a version with network capture via raspberry pi and kismet. Let me know! Increase your local capture over a large area with a drone <br>without moving a hair!</br>
+  If people want me to deploy a version with network capture via raspberry pi and kismet. Let me know! Increase your local capture over a large area with a drone <b>without moving a hair!</b>
 </i>
 
 <p align="center">
